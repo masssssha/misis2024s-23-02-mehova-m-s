@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cmath>
-#include <string>
 #include <vector>
 
 long long nod(long long a, long long b) {
