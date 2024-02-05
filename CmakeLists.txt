@@ -23,3 +23,4 @@ project ("misis2024s-23-02-mehova-m-s")
 # Включите подпроекты.
 add_subdirectory ("prj.codeforces")
 add_subdirectory ("prj.lab")
+add_subdirectory ("prj.test")
