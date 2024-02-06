@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <string>
 #include <vector>
 
 long long nod(long long a, long long b) {
@@ -7,15 +8,6 @@ long long nod(long long a, long long b) {
     if (a > b) a %= b;
     else b %= a;
   return a + b;
-}
-
-long long del(long long& c) {
-  for (int i = 2; i < (int)std::sqrt(c) + 1; i++) {
-    if (c % i == 0) {
-      return i;
-    }
-  }
-  return c;
 }
 
 int main() {
@@ -31,16 +23,6 @@ int main() {
     }
     else {
       int ans(a * b / nod(a, b));
-      if (ans == b) {
-        long long ad(del(a));
-        long long bd(del(b));
-        if (ad == 1) {
-          ans *= bd;
-        }
-        else {
-          ans *= std::min(ad, bd);
-        }
-      }
       std::cout << ans << std::endl;
     }
   }
