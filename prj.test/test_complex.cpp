@@ -4,6 +4,6 @@
 typedef Complex Rat;
 
 int main() {
-  Rat a(2, 4);
-  std::cout << a.separator << " " << Complex::separator;
+  Rat a(2, -5);
+  std::cout << (a * a) << std::endl;
 }

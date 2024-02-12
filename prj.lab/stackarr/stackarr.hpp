@@ -1,14 +1,16 @@
 #ifndef STACKARR_HPP
 #define STACKARR_HPP
 #include <iosfwd>
-#include <complex/complex.hpp>
 #include <stdexcept>
+#include <cstddef>
+
+class Complex;
 
 class StackArr {
 public:
   StackArr() = default;
   StackArr(const StackArr& x);
-  ~StackArr();
+  ~StackArr() = default;
   StackArr& operator=(const StackArr& x);
   const Complex& Top();
   void Push(const Complex& x);
