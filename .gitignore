@@ -30,6 +30,7 @@ bin
 out
 .dbg
 dbg
+bin.dbg
 # Executables
 *.exe
 *.out
