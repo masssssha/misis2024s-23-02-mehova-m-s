@@ -19,6 +19,7 @@ public:
   void Push(const Complex& x);
   void Pop() noexcept;
   bool IsEmpty() noexcept;
+  StackLst& operator=(const StackLst& x);
 };
 
 #endif

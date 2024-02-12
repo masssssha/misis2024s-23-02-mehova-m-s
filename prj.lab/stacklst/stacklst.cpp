@@ -1,6 +1,5 @@
 #include <stacklst/stacklst.hpp>
 #include <iostream>
-#include <algorithm>
 
 const Complex& StackLst::Top() {
   return (head_->v);
@@ -34,3 +33,12 @@ StackLst::~StackLst() {
   }
 }
 
+StackLst::StackLst(const StackLst& x) {
+  Node* t_head = x.head_;
+  while (t_head != nullptr) {
+    head_ = new Node;
+    head_->v = t_head->v;
+    head_->next = t_head->next;
+    t_head = t_head->next;
+  }
+}

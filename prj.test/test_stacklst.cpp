@@ -19,4 +19,6 @@ TEST_CASE("stackarr") {
   CHECK(a.Top() == Complex(3, 7));
   a.Pop();
   CHECK(a.Top() == Complex(3, 5));
+  StackLst b(a);
+  CHECK(b.Top() == a.Top());
 }

@@ -3,7 +3,9 @@
 #include <iostream>
 #include <algorithm>
 
-StackArr::StackArr(const StackArr& x) : size_(x.size_) {
+StackArr::StackArr(const StackArr& x) {
+  size_ = x.size_;
+  i_head_ = x.i_head_;
   data_ = new Complex[x.size_];
   auto rat = std::copy(x.data_, x.data_ + size_, data_);
 }
