@@ -25,7 +25,7 @@
 *.la
 *.a
 *.lib
-
+bin
 .vs
 out
 # Executables
