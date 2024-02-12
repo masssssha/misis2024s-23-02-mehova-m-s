@@ -18,6 +18,9 @@ const Complex& StackArr::Top() {
   if (i_head_ != -1) {
     return data_[i_head_];
   }
+  else {
+    throw std::logic_error("StackArr is empty");
+  }
 }
 
 void StackArr::Push(const Complex& x) {

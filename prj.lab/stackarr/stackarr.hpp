@@ -4,13 +4,13 @@
 #include <stdexcept>
 #include <cstddef>
 
-class Complex;
+struct Complex;
 
 class StackArr {
 public:
   StackArr() = default;
   StackArr(const StackArr& x);
-  ~StackArr() = default;
+  ~StackArr();
   StackArr& operator=(const StackArr& x);
   const Complex& Top();
   void Push(const Complex& x);
