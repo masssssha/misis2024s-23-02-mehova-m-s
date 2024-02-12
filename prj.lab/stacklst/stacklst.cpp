@@ -33,3 +33,4 @@ StackLst::~StackLst() {
     Pop();
   }
 }
+

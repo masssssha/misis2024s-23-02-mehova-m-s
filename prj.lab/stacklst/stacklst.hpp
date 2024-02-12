@@ -13,6 +13,7 @@ public:
   };
   Node* head_ = nullptr;
   StackLst() = default;
+  StackLst(const StackLst& x);
   ~StackLst();
   const Complex& Top();
   void Push(const Complex& x);
