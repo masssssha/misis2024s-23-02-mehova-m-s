@@ -28,6 +28,7 @@
 bin
 .vs
 out
+.dbg
 # Executables
 *.exe
 *.out
