@@ -2,6 +2,7 @@
 #include <stackarr/stackarr.hpp>
 #include <stdexcept>
 #include <algorithm>
+#include <iostream>
 
 StackArr::StackArr(const StackArr& x) {
   size_ = x.size_;
@@ -26,31 +27,35 @@ const Complex& StackArr::Top() const {
 }
 
 void StackArr::Push(const Complex& x) {
-  if (size_ == 0) {
-    data_ = new Complex[8];
-    i_head_ += 1;
-    data_[i_head_] = x;
-    size_ = 8;
-  }
   if (i_head_ + 1 < size_) {
     i_head_ += 1;
     data_[i_head_] = x;
   }
   else {
-    Complex* new_data_ = new Complex[size_ * 2];
-    auto rat = std::copy(data_, data_ + size_, new_data_);
-    i_head_ += 1;
-    *(new_data_ + i_head_) = x;
-    size_ *= 2;
-    delete[] data_;
-    data_ = new_data_;
+    if (size_ == 0) {
+      data_ = new Complex[8];
+      i_head_ += 1;
+      data_[i_head_] = x;
+      size_ = 8;
+    }
+    else {
+      Complex* new_data_ = new Complex[size_ * 2];
+      auto rat = std::copy(data_, data_ + size_, new_data_);
+      i_head_ += 1;
+      *(new_data_ + i_head_) = x;
+      size_ *= 2;
+      delete[] data_;
+      data_ = new_data_;
+    }
   }
+  std::cout << i_head_ << std::endl;
 }
 
 void StackArr::Pop() noexcept {
   if (i_head_ != -1) {
     i_head_ -= 1;
   }
+  std::cout << i_head_ << std::endl;
 }
 
 bool StackArr::IsEmpty() noexcept {
