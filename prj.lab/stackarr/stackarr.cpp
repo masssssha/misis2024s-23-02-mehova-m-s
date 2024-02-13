@@ -54,7 +54,7 @@ void StackArr::Pop() noexcept {
 }
 
 bool StackArr::IsEmpty() noexcept {
-  if (size_ == 0) {
+  if (i_head_ == -1) {
     return true;
   }
   else {
