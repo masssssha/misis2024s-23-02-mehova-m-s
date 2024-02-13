@@ -1,7 +1,5 @@
 #ifndef STACKARR_HPP
 #define STACKARR_HPP
-#include <iosfwd>
-#include <stdexcept>
 #include <cstddef>
 
 struct Complex;
@@ -12,10 +10,11 @@ public:
   StackArr(const StackArr& x);
   ~StackArr();
   StackArr& operator=(const StackArr& x);
-  const Complex& Top();
+  const Complex& Top() const;
   void Push(const Complex& x);
   void Pop() noexcept;
   bool IsEmpty() noexcept;
+  void Clear() noexcept;
 private:
   Complex* data_ = nullptr;
   std::ptrdiff_t size_ = 0;

@@ -1,6 +1,6 @@
 #include <complex/complex.hpp>
 #include <stackarr/stackarr.hpp>
-#include <iostream>
+#include <stdexcept>
 #include <algorithm>
 
 StackArr::StackArr(const StackArr& x) {
@@ -16,7 +16,7 @@ StackArr::~StackArr() {
   size_ = 0;
 }
 
-const Complex& StackArr::Top() {
+const Complex& StackArr::Top() const {
   if (i_head_ != -1) {
     return data_[i_head_];
   }
@@ -76,4 +76,8 @@ StackArr& StackArr::operator=(const StackArr& x) {
   }
   i_head_ = x.i_head_;
   return *this;
+}
+
+void StackArr::Clear() noexcept {
+  i_head_ = -1;
 }
