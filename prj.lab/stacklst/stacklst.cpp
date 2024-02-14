@@ -50,5 +50,4 @@ StackLst::StackLst(const StackLst& x) {
     new_head->v = temp_head->v;
   }
   new_head->next = nullptr;
-
 }
