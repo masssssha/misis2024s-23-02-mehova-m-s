@@ -48,14 +48,12 @@ void StackArr::Push(const Complex& x) {
       data_ = new_data_;
     }
   }
-  std::cout << i_head_ << std::endl;
 }
 
 void StackArr::Pop() noexcept {
   if (i_head_ != -1) {
     i_head_ -= 1;
   }
-  std::cout << i_head_ << std::endl;
 }
 
 bool StackArr::IsEmpty() noexcept {
@@ -68,18 +66,22 @@ bool StackArr::IsEmpty() noexcept {
 }
 
 StackArr& StackArr::operator=(const StackArr& x) {
-  if (size_ <= x.size_) {
-    size_ = x.size_;
-    data_ = new Complex[size_];
-    auto rat = std::copy(x.data_, x.data_ + size_, data_);
-  }
-  else {
-    for (int i = 0; i < x.size_; i++) {
-      data_[i] = x.data_[i];
+  if (data_ != x.data_) {
+    if (size_ <= x.size_) {
+      delete[] data_;
+      data_ = new Complex[size_];
     }
     size_ = x.size_;
+    auto rat = std::copy(x.data_, x.data_ + size_, data_);
+    //}
+    /*else {
+      for (int i = 0; i < x.size_; i++) {
+        data_[i] = x.data_[i];
+      }
+      size_ = x.size_;
+    }*/
+    i_head_ = x.i_head_;
   }
-  i_head_ = x.i_head_;
   return *this;
 }
 

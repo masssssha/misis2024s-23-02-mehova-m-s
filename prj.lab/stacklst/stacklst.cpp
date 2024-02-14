@@ -8,7 +8,7 @@ const Complex& StackLst::Top() {
   return (head_->v);
 }
 
-void StackLst::Push(const Complex& x) {
+void StackLst::Push(const Complex& x) { 
   Node* temp = head_;
   head_ = new Node;
   head_->v = x;

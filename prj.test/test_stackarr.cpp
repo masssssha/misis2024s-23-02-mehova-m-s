@@ -72,4 +72,7 @@ TEST_CASE("is empty") {
 
   CHECK_EQ(s.IsEmpty(), true);
   CHECK_THROWS(s.Top());
+  s.Push(Complex(5, 2));
+  s = s;
+  CHECK(s.Top() == Complex(5, 2));
 }
