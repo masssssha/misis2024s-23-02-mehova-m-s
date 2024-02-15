@@ -1,4 +1,5 @@
-#include <stacklst/stacklst.hpp>
+#include "stacklst.hpp"
+#include <stdexcept>
 #include <iostream>
 
 const Complex& StackLst::Top() {
@@ -50,4 +51,46 @@ StackLst::StackLst(const StackLst& x) {
     new_head->v = temp_head->v;
   }
   new_head->next = nullptr;
+}
+
+StackLst& StackLst::operator=(const StackLst& x) {
+  if (x.head_ != head_) {
+    if (x.head_ == nullptr && head_ != nullptr) {
+      while (head_ != nullptr) {
+        Pop();
+      }
+    }
+    else {
+      if (head_ == nullptr && x.head_ != nullptr) {
+        head_ = new Node;
+      }
+      Node* new_stack = head_;
+      Node* temp_head = x.head_;
+      new_stack->v = temp_head->v;
+      while (new_stack->next != nullptr && temp_head->next != nullptr) {
+        new_stack = new_stack->next;
+        temp_head = temp_head->next;
+        new_stack->v = temp_head->v;
+      }
+      if (new_stack->next == nullptr && temp_head->next != nullptr) {
+        while (temp_head->next != nullptr) {
+          new_stack->next = new Node;
+          new_stack = new_stack->next;
+          temp_head = temp_head->next;
+          new_stack->v = temp_head->v;
+        }
+        new_stack->next = nullptr;
+      }
+      if (new_stack->next != nullptr && temp_head->next == nullptr) {
+        Node* show = new_stack->next;
+        new_stack->next = nullptr;
+        while (show->next != nullptr) {
+          Node* curr = show;
+          show = show->next;
+          delete curr;
+        }
+      }
+    }
+  }
+  return *this;
 }

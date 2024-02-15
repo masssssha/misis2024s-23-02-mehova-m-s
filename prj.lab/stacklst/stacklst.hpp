@@ -1,8 +1,6 @@
 #ifndef STACKLST_HPP
 #define STACKLST_HPP
 #include <iosfwd>
-#include <stdexcept>
-#include <cstddef>
 #include <complex/complex.hpp>
 
 class StackLst {
