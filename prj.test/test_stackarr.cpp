@@ -42,6 +42,37 @@ TEST_CASE("copy ctor") {
   CHECK_EQ(z1, s.Top());
 
   CHECK_EQ(z3, ss.Top());
+  StackArr a;
+  a.Push(Complex(5, 1));
+  a.Push(Complex(5, 2));
+  a.Push(Complex(5, 3));
+  StackArr b;
+  b = a;
+  CHECK(b.Top() == a.Top());
+  b.Pop();
+  CHECK(b.Top() == Complex(5, 2));
+  b.Pop();
+  CHECK(b.Top() == Complex(5, 1));
+  b.Pop();
+  CHECK_THROWS(b.Top());
+  b.Push(Complex(1, 1));
+  b.Push(Complex(1, 2));
+  b.Push(Complex(1, 3));
+  b.Push(Complex(1, 4));
+  b.Push(Complex(1, 5));
+  b.Push(Complex(1, 6));
+  b.Push(Complex(1, 7));
+  b.Push(Complex(1, 8));
+  b.Push(Complex(1, 9));
+  CHECK(b.Top() == Complex(1, 9));
+  a = b;
+  CHECK(a.Top() == b.Top());
+  a.Pop();
+  CHECK(a.Top() == Complex(1, 8));
+  b.Pop();
+  b.Pop();
+  b.Pop();
+  CHECK(b.Top() == Complex(1, 6));
 }
 
 TEST_CASE("eq operator") {

@@ -68,7 +68,7 @@ StackArr& StackArr::operator=(const StackArr& x) {
   if (data_ != x.data_) {
     if (size_ <= x.size_) {
       delete[] data_;
-      data_ = new Complex[size_];
+      data_ = new Complex[x.size_];
     }
     size_ = x.size_;
     auto rat = std::copy(x.data_, x.data_ + size_, data_);
