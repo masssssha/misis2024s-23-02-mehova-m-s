@@ -75,4 +75,6 @@ TEST_CASE("stacklst") {
   CHECK(ss.Top() == Complex(1, 3));
   ss.Pop();
   CHECK(ss.Top() == Complex(1, 2));
+  ss.Pop();
+  CHECK_THROWS(ss.Top());
 }
