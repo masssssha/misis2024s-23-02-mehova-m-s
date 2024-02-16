@@ -2,6 +2,7 @@
 #define COMPLEX_HPP
 #include <iosfwd>
 #include <limits>
+#include <cstdlib>
 
 struct Complex {
   [[nodiscard]] Complex() = default;
