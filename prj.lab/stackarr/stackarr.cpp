@@ -2,6 +2,7 @@
 #include "stackarr.hpp"
 #include <stdexcept>
 #include <algorithm>
+#include <iostream>
 
 StackArr::StackArr(const StackArr& x) {
   size_ = x.size_;
