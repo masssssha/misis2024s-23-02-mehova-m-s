@@ -1,1 +1,2 @@
-add_executable (1922a "1922a.cpp")
+add_executable (0765b "0765b.cpp")
+add_executable (0515a "0515a.cpp")
