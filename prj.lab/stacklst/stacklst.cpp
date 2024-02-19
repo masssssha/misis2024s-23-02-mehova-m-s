@@ -94,3 +94,10 @@ StackLst& StackLst::operator=(const StackLst& x) {
   }
   return *this;
 }
+
+void StackLst::Clear() noexcept {
+  while (head_->next != nullptr) {
+    Pop();
+  }
+  head_ = nullptr;
+}
