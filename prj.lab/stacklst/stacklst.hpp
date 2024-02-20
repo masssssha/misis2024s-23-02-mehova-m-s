@@ -1,6 +1,8 @@
 #ifndef STACKLST_HPP
 #define STACKLST_HPP
 #include <cstddef>
+#include <cstdlib>
+#include <iostream>
 #include <complex/complex.hpp>
 
 class StackLst {
@@ -8,7 +10,8 @@ public:
   StackLst() = default;
   StackLst(const StackLst& x);
   ~StackLst();
-  const Complex& Top();
+  Complex& Top();
+  const Complex& Top() const;
   void Push(const Complex& x);
   void Pop() noexcept;
   bool IsEmpty() noexcept;

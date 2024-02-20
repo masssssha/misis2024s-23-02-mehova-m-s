@@ -17,6 +17,15 @@ StackArr::~StackArr() {
   size_ = 0;
 }
 
+Complex& StackArr::Top() {
+  if (i_head_ != -1) {
+    return data_[i_head_];
+  }
+  else {
+    throw std::logic_error("StackArr is empty");
+  }
+}
+
 const Complex& StackArr::Top() const {
   if (i_head_ != -1) {
     return data_[i_head_];

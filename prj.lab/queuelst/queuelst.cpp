@@ -2,8 +2,15 @@
 #include <stdexcept>
 #include <iostream>
 
+Complex& QueueLst::Top() {
+  if (head_ == nullptr) {
+    throw std::logic_error("Stack is empty");
+  }
+  return (head_->v);
+}
+
 //should work
-const Complex& QueueLst::Top() {
+const Complex& QueueLst::Top() const {
   if (head_ == nullptr) {
     throw std::logic_error("Stack is empty");
   }
@@ -37,7 +44,7 @@ void QueueLst::Pop() noexcept {
 }
 
 //correct
-bool QueueLst::IsEmpty() noexcept {
+bool QueueLst::IsEmpty() const noexcept {
   if (head_ == nullptr) {
     return true;
   }

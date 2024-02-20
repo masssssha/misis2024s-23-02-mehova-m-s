@@ -10,6 +10,7 @@ public:
   StackArr(const StackArr& x);
   ~StackArr();
   StackArr& operator=(const StackArr& x);
+  Complex& Top();
   const Complex& Top() const;
   void Push(const Complex& x);
   void Pop() noexcept;

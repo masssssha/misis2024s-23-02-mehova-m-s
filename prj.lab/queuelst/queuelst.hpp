@@ -8,10 +8,11 @@ public:
   QueueLst() = default;
   QueueLst(const QueueLst& x);
   ~QueueLst();
-  const Complex& Top();
+  Complex& Top();
+  [[nodiscard]] const Complex& Top() const;
   void Push(const Complex& x);
   void Pop() noexcept;
-  bool IsEmpty() noexcept;
+  bool IsEmpty() const noexcept;
   QueueLst& operator=(const QueueLst& x);
   void Clear() noexcept;
 private:

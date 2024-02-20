@@ -1,8 +1,14 @@
 #include "stacklst.hpp"
 #include <stdexcept>
-#include <iostream>
 
-const Complex& StackLst::Top() {
+Complex& StackLst::Top() {
+  if (head_ == nullptr) {
+    throw std::logic_error("Stack is empty");
+  }
+  return (head_->v);
+}
+
+const Complex& StackLst::Top() const {
   if (head_ == nullptr) {
     throw std::logic_error("Stack is empty");
   }
