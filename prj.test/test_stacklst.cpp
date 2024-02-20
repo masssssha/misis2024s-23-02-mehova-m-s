@@ -77,4 +77,21 @@ TEST_CASE("stacklst") {
   CHECK(ss.Top() == Complex(1, 2));
   ss.Pop();
   CHECK_THROWS(ss.Top());
+  StackLst e;
+  StackLst d;
+  d.Push(Complex(5, 5));
+  e.Push(Complex(1, 12));
+  e.Push(Complex(12, 1));
+  e.Push(Complex(3, 4));
+  e.Push(Complex(1, 5));
+  d = e; //присваиваю больший
+  CHECK(d.Top() == Complex(1, 5));
+  d.Pop();
+  CHECK(d.Top() == Complex(3, 4));
+  d.Pop();
+  CHECK(d.Top() == Complex(12, 1));
+  d.Pop();
+  CHECK(d.Top() == Complex(1, 12));
+  d.Pop();
+  CHECK_THROWS(d.Top());
 }
