@@ -25,7 +25,7 @@ public:
   Eigen::MatrixXd section_poly_;  // shell closed polyline
   Eigen::MatrixXd shell_surf_v_;   // shell surface vertex
   Eigen::MatrixXi shell_surf_f_;  // shell surface faccets
-  double r_ = 0.4;                //  
+  double r_ = 0.4;                //  iccv
   double w_ = 10.0;                //
   double h_ = 10.0;                //
   int n_medial_seg_ = 100;        // medial uniform segments count
