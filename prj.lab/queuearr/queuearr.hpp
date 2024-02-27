@@ -1,15 +1,15 @@
-#ifndef STACKARR_HPP
-#define STACKARR_HPP
+#ifndef QUEUEARR_HPP
+#define QUEUEARR_HPP
 #include <cstddef>
 
 struct Complex;
 
-class StackArr {
+class QueueArr {
 public:
-  StackArr() = default;
-  StackArr(const StackArr& x);
-  ~StackArr();
-  StackArr& operator=(const StackArr& x);
+  QueueArr() = default;
+  QueueArr(const QueueArr& x);
+  ~QueueArr();
+  QueueArr& operator=(const QueueArr& x);
   Complex& Top();
   const Complex& Top() const;
   void Push(const Complex& x);
@@ -20,6 +20,8 @@ private:
   Complex* data_ = nullptr;
   std::ptrdiff_t size_ = 0;
   std::ptrdiff_t i_head_ = -1;
+  std::ptrdiff_t i_tail_ = -1;
+  std::ptrdiff_t count = 0;
 };
 
 #endif

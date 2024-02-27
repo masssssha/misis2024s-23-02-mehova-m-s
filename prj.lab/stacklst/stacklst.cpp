@@ -102,8 +102,7 @@ StackLst& StackLst::operator=(const StackLst& x) {
 }
 
 void StackLst::Clear() noexcept {
-  while (head_->next != nullptr) {
+  while (!IsEmpty()) {
     Pop();
   }
-  head_ = nullptr;
 }

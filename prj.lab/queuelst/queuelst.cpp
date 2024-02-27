@@ -4,7 +4,7 @@
 
 Complex& QueueLst::Top() {
   if (head_ == nullptr) {
-    throw std::logic_error("Stack is empty");
+    throw std::logic_error("Queue is empty");
   }
   return (head_->v);
 }
@@ -12,7 +12,7 @@ Complex& QueueLst::Top() {
 //should work
 const Complex& QueueLst::Top() const {
   if (head_ == nullptr) {
-    throw std::logic_error("Stack is empty");
+    throw std::logic_error("Queue is empty");
   }
   return (head_->v);
 }
