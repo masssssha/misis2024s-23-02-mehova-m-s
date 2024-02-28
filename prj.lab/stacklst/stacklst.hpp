@@ -3,12 +3,14 @@
 #include <cstddef>
 #include <cstdlib>
 #include <iostream>
+#include <utility>
 #include <complex/complex.hpp>
 
 class StackLst {
 public:
   StackLst() = default;
   StackLst(const StackLst& x);
+  StackLst(StackLst&& x) noexcept;
   ~StackLst();
   Complex& Top();
   const Complex& Top() const;
@@ -16,6 +18,7 @@ public:
   void Pop() noexcept;
   bool IsEmpty() noexcept;
   StackLst& operator=(const StackLst& x);
+  StackLst& operator=(StackLst&& x) noexcept;
   void Clear() noexcept;
 private:
   struct Node {

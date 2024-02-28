@@ -1,6 +1,21 @@
 #include "stacklst.hpp"
 #include <stdexcept>
 
+StackLst::StackLst(StackLst&& x) noexcept {
+  Clear();
+  head_ = x.head_;
+  x.head_ = nullptr;
+}
+
+StackLst& StackLst::operator=(StackLst&& x) noexcept {
+  if (head_ != x.head_) {
+    Clear();
+    head_ = x.head_;
+    x.head_ = nullptr;
+  }
+  return *this;
+}
+
 Complex& StackLst::Top() {
   if (head_ == nullptr) {
     throw std::logic_error("Stack is empty");

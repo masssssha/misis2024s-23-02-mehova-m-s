@@ -4,6 +4,8 @@
 #include <iostream>
 #include <cstddef>
 #include <stdexcept>
+#include <algorithm>
+#include <utility>
 
 class DynArr {
 public:
@@ -11,17 +13,11 @@ public:
 	DynArr(const DynArr& x);    //done
 	DynArr(const std::ptrdiff_t s);     //done
 	~DynArr();                          //done
-	std::ptrdiff_t Size() const;        //done
+	DynArr(DynArr&& x) noexcept;
+	std::ptrdiff_t Size() const;
 	void Resize(const std::ptrdiff_t s);
-	DynArr& operator=(const DynArr& x) {
-		if (this != &x) {
-			Resize(x.Size());
-			for (int i = 0; i < x.Size(); i++) {
-				*(data_ + i) = x[i];
-			}
-		}
-		return *this;
-	}
+	DynArr& operator=(const DynArr& x);
+	DynArr& operator=(DynArr&& x) noexcept;
 	float& operator[](const std::ptrdiff_t i);        //done
 	const float& operator[](const std::ptrdiff_t i) const;    //done
 	std::ptrdiff_t capacity() const noexcept {

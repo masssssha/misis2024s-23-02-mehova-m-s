@@ -1,7 +1,15 @@
 #include <iostream>
 #include <sstream>
-#include <limits>
 #include <complex/complex.hpp>
+
+Complex::Complex(Complex&& x) noexcept :re(x.re), im(x.im) {}
+
+Complex& Complex::operator=(Complex&& x) noexcept {
+  re = x.re;
+  im = x.im;
+  return *this;
+}
+
 Complex Complex::operator-() const noexcept {
   return Complex(-re, -im);
 }

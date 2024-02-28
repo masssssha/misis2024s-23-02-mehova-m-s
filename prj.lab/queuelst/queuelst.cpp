@@ -2,6 +2,24 @@
 #include <stdexcept>
 #include <iostream>
 
+QueueLst::QueueLst(QueueLst&& x) noexcept {
+  head_ = x.head_;
+  tail_ = x.tail_;
+  x.head_ = nullptr;
+  x.tail_ = nullptr;
+}
+
+QueueLst& QueueLst::operator=(QueueLst&& x) noexcept {
+  if (x.head_ != head_) {
+    Clear();
+    head_ = x.head_;
+    tail_ = x.tail_;
+    x.head_ = nullptr;
+    x.tail_ = nullptr;
+  }
+  return *this;
+}
+
 Complex& QueueLst::Top() {
   if (head_ == nullptr) {
     throw std::logic_error("Queue is empty");
@@ -78,13 +96,13 @@ QueueLst::QueueLst(const QueueLst& x) {
 //rewrite pls!!!!!!!
 QueueLst& QueueLst::operator=(const QueueLst& x) {
   if (x.head_ != head_) {
-    if (x.head_ == nullptr && head_ != nullptr) {
+    if (x.head_ == nullptr) {
       while (head_ != nullptr) {
         Pop();
       }
     }
     else {
-      if (head_ == nullptr && x.head_ != nullptr) {
+      if (head_ == nullptr) {
         head_ = new Node;
         tail_ = head_;
       }

@@ -3,15 +3,18 @@
 
 #include <iosfwd>
 #include <sstream>
+#include <utility>
 
 class Rational {
 	public:
 		Rational() = default;
 		~Rational() = default;
 		Rational(const Rational& x) = default;
+		Rational(Rational&& x) = default;
 		Rational(const std::int64_t& first, const std::int64_t& second);
 		Rational(const std::int64_t& first);
 		Rational& operator=(const Rational&) = default;
+		Rational& operator=(Rational&&) = default;
 
 		std::int64_t num() const noexcept { return num_; }
 		std::int64_t den() const noexcept { return den_; }

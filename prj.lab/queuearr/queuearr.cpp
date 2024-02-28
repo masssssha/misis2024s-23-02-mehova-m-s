@@ -13,7 +13,7 @@ QueueArr& QueueArr::operator=(const QueueArr& x) {
     size_ = x.size_;
     auto rat = std::copy(x.data_, x.data_ + size_, data_);
     i_head_ = x.i_head_;
-    i_tail_ = x.i_head_;
+    i_tail_ = x.i_tail_;
     count = x.count;
   }
   return *this;
@@ -50,7 +50,7 @@ void QueueArr::Pop() noexcept {
     i_head_ += 1;
     count -= 1;
   }
-  std::cout << "POP " << i_head_ << " " << data_[i_head_%size_] << "   " << i_tail_ << " " << data_[i_tail_%size_] << " COUNT " << count << std::endl;
+  //std::cout << "POP " << i_head_ << " " << data_[i_head_%size_] << "   " << i_tail_ << " " << data_[i_tail_%size_] << " COUNT " << count << std::endl;
 }
 
 void QueueArr::Clear() noexcept {
@@ -97,7 +97,6 @@ void QueueArr::Push(const Complex& x) {
       count += 1;
     }
     else {
-      std::cout << "WTF" << std::endl;
       Complex* temp = data_;
       data_ = new Complex[size_ * 2];
       for (int i = 0; i < size_ - i_head_; i++) {
@@ -122,5 +121,5 @@ void QueueArr::Push(const Complex& x) {
     count += 1;
     data_[i_tail_] = x;
   }
-  std::cout << "PUSH " << i_head_ << " " << data_[i_head_%size_] << "   " << i_tail_ << " " << data_[i_tail_%size_] << std::endl;
+  //std::cout << "PUSH " << i_head_ << " " << data_[i_head_%size_] << "   " << i_tail_ << " " << data_[i_tail_%size_] << std::endl;
 }

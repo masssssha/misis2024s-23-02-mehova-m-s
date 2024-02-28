@@ -1,5 +1,32 @@
 #include <dynarr/dynarr.hpp>
 
+DynArr::DynArr(DynArr&& x) noexcept : size_(x.size_) {
+	data_ = x.data_;
+	capacity_ = size_;
+	x.data_ = nullptr;
+}
+
+DynArr& DynArr::operator=(DynArr&& x) noexcept {
+	if (this != &x) {
+		delete[] data_;
+		data_ = x.data_;
+		size_ = x.size_;
+		capacity_ = x.capacity_;
+		x.data_ = nullptr;
+	}
+	return *this;
+}
+
+DynArr& DynArr::operator=(const DynArr& x) {
+	if (this != &x) {
+		Resize(x.Size());
+		for (int i = 0; i < x.Size(); i++) {
+			*(data_ + i) = x[i];
+		}
+	}
+	return *this;
+}
+
 //copy maker
 DynArr::DynArr(const DynArr& x)
 	: size_(x.size_) {

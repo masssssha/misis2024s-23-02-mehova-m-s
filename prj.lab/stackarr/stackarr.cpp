@@ -1,8 +1,24 @@
 #include <complex/complex.hpp>
 #include "stackarr.hpp"
-#include <stdexcept>
-#include <algorithm>
-#include <iostream>
+
+StackArr& StackArr::operator=(StackArr&& x) noexcept {
+  if (data_ != x.data_) {
+    delete[] data_;
+    data_ = x.data_;
+    size_ = x.size_;
+    i_head_ = x.i_head_;
+    x.data_ = nullptr;
+  }
+  return *this;
+}
+
+StackArr::StackArr(StackArr&& x) noexcept {
+  delete[] data_;
+  data_ = x.data_;
+  size_ = x.size_;
+  i_head_ = x.i_head_;
+  x.data_ = nullptr;
+}
 
 StackArr::StackArr(const StackArr& x) {
   size_ = x.size_;

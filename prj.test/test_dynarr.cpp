@@ -39,3 +39,19 @@ TEST_CASE("check") {
   CHECK_THROWS(DynArr(-1));
   CHECK_THROWS((DynArr(0)));
 };
+
+/*TEST_CASE("&&") {
+  DynArr a(5);
+  for (int i = 0; i < 5; i++) {
+    a[i] = i * 2;
+  }
+  DynArr b(std::move(a));
+  for (int i = 0; i < 5; i++) {
+    std::cout << b[i] << " ";
+  }
+  DynArr c;
+  c = std::move(b);
+  for (int i = 0; i < 5; i++) {
+    std::cout << c[i] << " ";
+  }
+}*/

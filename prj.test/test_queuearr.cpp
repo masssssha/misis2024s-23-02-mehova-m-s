@@ -44,6 +44,8 @@ TEST_CASE("queuearr") {
   a.Push(Complex(18, 4));
   a.Push(Complex(19, 4));
   QueueArr b(a);
+  QueueArr d;
+  d = a;
   CHECK(a.Top() == b.Top());
   b.Pop();
   CHECK(b.Top() == Complex(10, 4));
@@ -59,4 +61,29 @@ TEST_CASE("queuearr") {
   CHECK(b.Top() == Complex(19, 4));
   b.Pop();
   CHECK_THROWS(b.Top());
+  QueueArr c;
+  c = b;
+  CHECK_THROWS(c.Top());
+  c.Push(Complex(1, 2));
+  c.Push(Complex(2, 2));
+  CHECK(c.Top() == Complex(1, 2));
+  b = c;
+  CHECK(b.Top() == Complex(1, 2));
+  b.Pop();
+  CHECK(b.Top() == Complex(2, 2));
+  c = b;
+  CHECK(c.Top() == Complex(2, 2));
+  CHECK(d.Top() == Complex(9, 4));
+  d.Pop();
+  CHECK(d.Top() == Complex(10, 4));
+  c = d;
+  CHECK(c.Top() == Complex(10, 4));
+  c.Pop();
+  c.Pop();
+  c.Pop();
+  c.Pop();
+  c.Pop();
+  CHECK(c.Top() == Complex(15, 4));
+  c = b;
+  CHECK(c.Top() == Complex(2, 2));
 }

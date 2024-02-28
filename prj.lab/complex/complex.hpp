@@ -3,13 +3,16 @@
 #include <iosfwd>
 #include <limits>
 #include <cstdlib>
+#include <utility>
 
 struct Complex {
   [[nodiscard]] Complex() = default;
   [[nodiscard]] Complex(const Complex&) = default;
   [[nodiscard]] explicit Complex(const double real);
   [[nodiscard]] Complex(const double real, const double imaginary);
+  Complex(Complex&& x) noexcept;
   Complex& operator=(const Complex&) = default;
+  Complex& operator=(Complex&& x) noexcept;
   ~Complex() = default;
   [[nodiscard]] Complex operator-() const noexcept;
 

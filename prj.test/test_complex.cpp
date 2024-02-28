@@ -1,9 +1,12 @@
 #include <complex/complex.hpp>
 #include <iostream>
+#include <utility>
 
 typedef Complex Rat;
 
 int main() {
-  Rat a(2, -5);
-  std::cout << (a * a) << std::endl;
+  Complex a(5, 1);
+  Complex b;
+  b = std::move(a);
+  std::cout << b;
 }

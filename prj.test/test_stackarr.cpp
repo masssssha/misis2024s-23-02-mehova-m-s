@@ -1,4 +1,3 @@
-
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <stackarr/stackarr.hpp>
 #include <complex/complex.hpp>
@@ -11,6 +10,49 @@ Complex z3(5, 6);
 
 TEST_CASE("default ctor") {
   StackArr s;
+  s.Push(Complex(1, 1));
+  s.Push(Complex(2, 1));
+  s.Push(Complex(3, 1));
+  s.Push(Complex(4, 1));
+  CHECK(s.Top() == Complex(4, 1));
+  s.Push(Complex(5, 1));
+  s.Push(Complex(6, 1));
+  s.Push(Complex(7, 1));
+  s.Push(Complex(8, 1));
+  s.Push(Complex(9, 1));
+  s.Push(Complex(10, 1));
+  s.Push(Complex(11, 1));
+  s.Push(Complex(12, 1));
+  CHECK(s.Top() == Complex(12, 1));
+  StackArr a;
+  a = std::move(s);
+  CHECK(a.Top() == Complex(12, 1));
+  a.Pop();
+  CHECK(a.Top() == Complex(11, 1));
+  a.Pop();
+  CHECK(a.Top() == Complex(10, 1));
+  a.Pop();
+  CHECK(a.Top() == Complex(9, 1));
+  StackArr b(std::move(a));
+  CHECK(b.Top() == Complex(9, 1));
+  b.Pop();
+  CHECK(b.Top() == Complex(8, 1));
+  b.Pop();
+  CHECK(b.Top() == Complex(7, 1));
+  b.Pop();
+  CHECK(b.Top() == Complex(6, 1));
+  b.Pop();
+  CHECK(b.Top() == Complex(5, 1));
+  b.Pop();
+  CHECK(b.Top() == Complex(4, 1));
+  b.Pop();
+  CHECK(b.Top() == Complex(3, 1));
+  b.Pop();
+  CHECK(b.Top() == Complex(2, 1));
+  b.Pop();
+  CHECK(b.Top() == Complex(1, 1));
+  b.Pop();
+  CHECK_THROWS(b.Top());
 }
 
 TEST_CASE("initializer list ctor") {

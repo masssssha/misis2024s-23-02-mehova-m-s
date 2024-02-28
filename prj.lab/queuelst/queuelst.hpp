@@ -2,11 +2,13 @@
 #define QUEUELST_HPP
 #include <cstddef>
 #include <complex/complex.hpp>
+#include <utility>
 
 class QueueLst {
 public:
   QueueLst() = default;
   QueueLst(const QueueLst& x);
+  QueueLst(QueueLst&& x) noexcept;
   ~QueueLst();
   Complex& Top();
   [[nodiscard]] const Complex& Top() const;
@@ -14,6 +16,7 @@ public:
   void Pop() noexcept;
   bool IsEmpty() const noexcept;
   QueueLst& operator=(const QueueLst& x);
+  QueueLst& operator=(QueueLst&& x) noexcept;
   void Clear() noexcept;
 private:
   struct Node {
