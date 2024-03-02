@@ -4,6 +4,7 @@
 #include <limits>
 #include <cstdlib>
 #include <utility>
+#include <algorithm>
 
 struct Complex {
   [[nodiscard]] Complex() = default;
