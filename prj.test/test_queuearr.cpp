@@ -86,4 +86,9 @@ TEST_CASE("queuearr") {
   CHECK(c.Top() == Complex(15, 4));
   c = b;
   CHECK(c.Top() == Complex(2, 2));
+  b.Push(Complex(3, 3));
+  c = std::move(b);
+  CHECK(c.Top() == Complex(2, 2));
+  c.Pop();
+  CHECK(c.Top() == Complex(3, 3));
 }
