@@ -7,7 +7,7 @@ QueueArr::QueueArr(QueueArr&& x) noexcept {
   i_head_ = x.i_head_;
   i_tail_ = x.i_tail_;
   count = x.count;
-  data_ = std::move(x.data_);
+  std::swap(data_, x.data_);
   x.data_ = nullptr;
 }
 
@@ -17,7 +17,7 @@ QueueArr& QueueArr::operator=(QueueArr&& x) noexcept {
     i_head_ = x.i_head_;
     i_tail_ = x.i_tail_;
     count = x.count;
-    data_ = std::move(x.data_);
+    std::swap(data_, x.data_);
     x.data_ = nullptr;
   }
   return *this;
@@ -28,6 +28,7 @@ QueueArr& QueueArr::operator=(const QueueArr& x) {
     if (size_ <= x.size_) {
       data_ = std::make_unique<Complex[]>(x.size_);
     }
+    //auto r = std::copy(x.data_, x.data_ + size_, data_);
     size_ = x.size_;
     for (int i = 0; i < size_; i++) {
       data_[i] = x.data_[i];
@@ -51,14 +52,6 @@ QueueArr::QueueArr(const QueueArr& x) {
   for (int i = 0; i < size_; i++) {
     data_[i] = x.data_[i];
   }
-}
-
-QueueArr::~QueueArr() {
-  data_ = nullptr;
-  size_ = 0;
-  count = 0;
-  i_head_ = -1;
-  i_tail_ = -1;
 }
 
 void QueueArr::Pop() noexcept {
@@ -118,16 +111,18 @@ void QueueArr::Push(const Complex& x) {
       count += 1;
     }
     else {
-      QueueArr temp(*this);
-      data_ = std::make_unique<Complex[]>(size_*2);
+      //QueueArr temp(*this);
+      auto data = std::make_unique<Complex[]>(size_ * 2);
+      //data_ = std::make_unique<Complex[]>(size_*2);
       for (int i = 0; i < size_ - i_head_; i++) {
-        data_[i] = temp.data_[i + i_head_];
+        data[i] = data_[i + i_head_];
       }
       for (int i = 0; i < i_tail_%size_; i++) {
-        data_[size_ - i_head_+1] = temp.data_[i];
+        data[size_ - i_head_+1] = data_[i];
       }
-      i_head_ = 0;
+      std::swap(data, data_);
       data_[size_ + 1] = x;
+      i_head_ = 0;
       i_tail_ += 1;
       count += 1;
       size_ *= 2;

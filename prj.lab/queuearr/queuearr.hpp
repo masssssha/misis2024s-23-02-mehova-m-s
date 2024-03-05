@@ -14,7 +14,7 @@ public:
   QueueArr() = default;
   QueueArr(const QueueArr& x);
   QueueArr(QueueArr&& x) noexcept;
-  ~QueueArr();
+  ~QueueArr() = default;
   QueueArr& operator=(const QueueArr& x);
   QueueArr& operator=(QueueArr&& x) noexcept;
   Complex& Top();

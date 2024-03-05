@@ -2,16 +2,12 @@
 #include <stdexcept>
 
 StackLst::StackLst(StackLst&& x) noexcept {
-  Clear();
-  head_ = x.head_;
-  x.head_ = nullptr;
+  std::swap(head_, x.head_);
 }
 
 StackLst& StackLst::operator=(StackLst&& x) noexcept {
   if (head_ != x.head_) {
-    Clear();
-    head_ = x.head_;
-    x.head_ = nullptr;
+    std::swap(head_, x.head_);
   }
   return *this;
 }
@@ -76,13 +72,13 @@ StackLst::StackLst(const StackLst& x) {
 
 StackLst& StackLst::operator=(const StackLst& x) {
   if (x.head_ != head_) {
-    if (x.head_ == nullptr && head_ != nullptr) {
+    if (x.head_ == nullptr) {
       while (head_ != nullptr) {
         Pop();
       }
     }
     else {
-      if (head_ == nullptr && x.head_ != nullptr) {
+      if (head_ == nullptr) {
         head_ = new Node;
       }
       Node* new_stack = head_;

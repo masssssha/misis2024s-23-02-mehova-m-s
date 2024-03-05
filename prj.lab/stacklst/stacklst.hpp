@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <utility>
+#include <algorithm>
 #include <complex/complex.hpp>
 
 class StackLst {
