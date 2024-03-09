@@ -2,7 +2,7 @@
 // vcpkg install libigl[core,opengl,glfw]
 // vcpkg install tinyspline
 
-/*#include <igl/opengl/glfw/Viewer.h>
+#include <igl/opengl/glfw/Viewer.h>
 #include <igl/writePLY.h>
 
 #include <tinysplinecxx.h>
@@ -100,16 +100,13 @@ void Shell::UpdateShell() {
   f = Eigen::MatrixXi(n_u - 2, 3);
   for (int i = 0; i < n_m - 1; i += 1) {
     f(i, 0) = i;
-    f(i, 1) = n_u + i + 1;
-    f(i, 2) = i + 1;
-
-    f(i, 0) = i;
-    f(i, 1) = n_u + i + 1;
+    f(i, 1) = n_u + i;
     f(i, 2) = i + 1;
 
     f(i + n_m - 1, 0) = i + 1;
     f(i + n_m - 1, 1) = i + n_u;
     f(i + n_m - 1, 2) = i + n_u + 1;
+    
   }
 }
 
@@ -149,22 +146,4 @@ int main() {
   viewer.launch();
 
   return 0;
-}
-*/
-
-#include <iostream>
-#include <Eigen/Dense>
-
-using Eigen::MatrixXd;
-using Eigen::VectorXd;
-
-int main()
-{
-  MatrixXd m = MatrixXd::Random(3, 3);
-  std::cout << "m zero = " << std::endl << m << std::endl;
-  m = (m + MatrixXd::Constant(3, 3, 1.2)) * 50;
-  std::cout << "m =" << std::endl << m << std::endl;
-  VectorXd v(3);
-  v << 1, 2, 3;
-  std::cout << "m * v =" << std::endl << m * v << std::endl;
 }
