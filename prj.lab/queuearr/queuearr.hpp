@@ -1,5 +1,6 @@
 #ifndef QUEUEARR_HPP
 #define QUEUEARR_HPP
+#include <complex/complex.hpp>
 #include <cstddef>
 #include <utility>
 #include <memory>

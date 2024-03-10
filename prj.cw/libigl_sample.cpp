@@ -16,7 +16,7 @@ public:
   Shell(const Shell&) = delete;
   Shell& operator=(const Shell&) = delete;
   ~Shell() = default;
-
+  Shell(const double& x);
   void SetW(const double w) { w_ = w; }
   void SetH(const double h) { h_ = h; }
 public:
@@ -32,6 +32,7 @@ public:
 private:
   void UpdateCountour();
   void UpdateShell();
+  void UpLine();
 };
 
 Shell::Shell() {
@@ -41,6 +42,19 @@ Shell::Shell() {
         1.0, 4.0, 0, // P3
         4.0, 3.0, 0, // P4
         7.0, 5.0, 0, // P5
+    }, 3); //  < -dimensionality of the points
+  UpdateCountour();
+  UpdateShell();
+  UpLine();
+}
+
+Shell::Shell(const double& x) {
+  spline_ = tinyspline::BSpline::interpolateCubicNatural(
+    { 1.0, -1.0, 0+x, // P1
+      -1.0, 2.0, 0+x,  // P2
+        1.0, 4.0, 0+x, // P3
+        4.0, 3.0, 0+x, // P4
+        7.0, 5.0, 0+x, // P5
     }, 3); //  < -dimensionality of the points
   UpdateCountour();
   UpdateShell();
@@ -108,6 +122,10 @@ void Shell::UpdateShell() {
     f(i + n_m - 1, 2) = i + n_u + 1;
     
   }
+}
+
+void Shell::UpLine() {
+  Shell newline(2.0);
 }
 
 

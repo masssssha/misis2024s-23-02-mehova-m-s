@@ -1,5 +1,6 @@
 #ifndef STACKARR_HPP
 #define STACKARR_HPP
+#include <complex/complex.hpp>
 #include <cstddef>
 #include <utility>
 #include <stdexcept>
