@@ -1,22 +1,23 @@
-CHECK: 20240311-125920
+CHECK: 20240311-152705
 OK: file codeforces.id is correct
 OK: folder prj.codeforces structure is correct
-ERROR: CMake generator failed
-ERROR: lab complex - test build failed
-ERROR: lab complex_io - test build failed
-ERROR: lab complex_m - test build failed
-ERROR: lab rational - test build failed
-ERROR: lab rational_io - test build failed
-ERROR: lab rational_m - test build failed
-ERROR: lab dynarr - test build failed
-ERROR: lab dynarr_m - test build failed
-ERROR: lab stackarr - test build failed
-ERROR: lab stackarr_m - test build failed
-ERROR: lab stacklst - test build failed
-ERROR: lab stacklst_m - test build failed
-ERROR: lab queuearr - test build failed
-ERROR: lab queuearr_m - test build failed
-ERROR: lab queuelst - test build failed
-ERROR: lab queuelst_m - test build failed
-ERROR: lab queuelstpr - test build failed
-ERROR: lab queuelstpr_m - test build failed
+OK: CMake generator successed
+OK: CMake build (MSVC x64) successed
+STATUS: lab complex - test-ok
+STATUS: lab complex_io - test-ok
+STATUS: lab complex_m - test-ok
+STATUS: lab rational - test-ok
+STATUS: lab rational_io - test-ok
+STATUS: lab rational_m - test-ok
+STATUS: lab dynarr - test-ok
+STATUS: lab dynarr_m - test-ok
+STATUS: lab stackarr - test-ok
+STATUS: lab stackarr_m - test-ok
+STATUS: lab stacklst - test-failed
+STATUS: lab stacklst_m - test-failed
+STATUS: lab queuearr - test-ok
+STATUS: lab queuearr_m - test-ok
+STATUS: lab queuelst - test-failed
+STATUS: lab queuelst_m - test-ok
+STATUS: lab queuelstpr - test-failed
+STATUS: lab queuelstpr_m - test-ok
