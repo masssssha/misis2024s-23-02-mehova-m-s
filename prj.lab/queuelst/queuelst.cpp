@@ -80,16 +80,18 @@ QueueLst::~QueueLst() {
 
 //i have some questions
 QueueLst::QueueLst(const QueueLst& x) {
-  head_ = new Node;
-  tail_ = head_;
-  head_->v = x.head_->v;
-  Node* new_tail = tail_;
-  Node* temp_head = x.head_;
-  while (temp_head->next != nullptr) {
-    new_tail->next = new Node;
-    new_tail = new_tail ->next;
-    temp_head = temp_head->next;
-    new_tail->v = temp_head->v;
+  if (x.head_ != nullptr) {
+    head_ = new Node;
+    tail_ = head_;
+    head_->v = x.head_->v;
+    Node* new_tail = tail_;
+    Node* temp_head = x.head_;
+    while (temp_head->next != nullptr) {
+      new_tail->next = new Node;
+      new_tail = new_tail->next;
+      temp_head = temp_head->next;
+      new_tail->v = temp_head->v;
+    }
   }
 }
 

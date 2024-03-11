@@ -5,6 +5,8 @@
 
 TEST_CASE("queuelst") {
   QueueLst s;
+  QueueLst cringe(s);
+  CHECK_THROWS(cringe.Top());
   s.Push(Complex(2, 2));
   CHECK(s.Top() == Complex(2, 2));
   s.Push(Complex(3, 3));

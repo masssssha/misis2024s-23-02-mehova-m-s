@@ -45,6 +45,21 @@ TEST_CASE("queuelstpr") {
   CHECK(ff.Top() == 30.5f);
 }
 
+TEST_CASE("ctor copy") {
+  QueueLstPr a;
+  QueueLstPr b(a);
+  CHECK_THROWS(b.Top());
+  b.Push(3.5f);
+  b.Push(3.1f);
+  b.Push(0.9f);
+  b.Push(2.1f);
+  b.Push(3.5f);
+  QueueLstPr c(b);
+  CHECK(c.Top() == 0.9f);
+  c.Pop();
+  CHECK(c.Top() == 2.1f);
+}
+
 TEST_CASE("operator=") {
   QueueLstPr a;
   QueueLstPr emp;

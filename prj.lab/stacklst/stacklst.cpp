@@ -57,17 +57,19 @@ StackLst::~StackLst() {
 }
 
 StackLst::StackLst(const StackLst& x) {
-  head_ = new Node;
-  head_->v = x.head_->v;
-  Node* new_head = head_;
-  Node* temp_head = x.head_;
-  while (temp_head->next != nullptr) {
-    new_head->next = new Node;
-    new_head = new_head->next;
-    temp_head = temp_head->next;
-    new_head->v = temp_head->v;
+  if (x.head_ != nullptr) {
+    head_ = new Node;
+    head_->v = x.head_->v;
+    Node* new_head = head_;
+    Node* temp_head = x.head_;
+    while (temp_head->next != nullptr) {
+      new_head->next = new Node;
+      new_head = new_head->next;
+      temp_head = temp_head->next;
+      new_head->v = temp_head->v;
+    }
+    new_head->next = nullptr;
   }
-  new_head->next = nullptr;
 }
 
 StackLst& StackLst::operator=(const StackLst& x) {

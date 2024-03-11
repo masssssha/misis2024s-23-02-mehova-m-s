@@ -27,7 +27,7 @@ void QueueLstPr::Push(const float& x) {
       //std::cout << "TEMP2 " << temp->next << std::endl;
     }
   }
-  //std::cout << head_ << " "  << head_->next << " " << tail_ << std::endl;
+  //std::cout << head_ << " "  << head_->next << std::endl;
 }
 
 bool QueueLstPr::IsEmpty() const noexcept {
@@ -72,15 +72,20 @@ void QueueLstPr::Clear() noexcept {
 }
 
 QueueLstPr::QueueLstPr(const QueueLstPr& x) {
-  head_ = new Node;
-  head_->v = x.head_->v;
-  Node* temp = x.head_->next;
-  Node* curr = head_;
-  while (temp != nullptr) {
-    curr->next = new Node;
-    curr = curr->next;
-    curr->v = temp->v;
-    temp = temp->next;
+  if (x.head_ == nullptr) {
+    Clear();
+  }
+  else {
+    head_ = new Node;
+    head_->v = x.head_->v;
+    Node* temp = x.head_;
+    Node* curr = head_;
+    while (temp->next != nullptr) {
+      curr->next = new Node;
+      curr = curr->next;
+      temp = temp->next;
+      curr->v = temp->v;
+    }
   }
 }
 

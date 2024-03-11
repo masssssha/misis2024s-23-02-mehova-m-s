@@ -5,6 +5,7 @@
 
 TEST_CASE("stacklst") {
   StackLst a;
+  StackLst pupupu(a);
   CHECK(a.IsEmpty() == true);
   a.Push(Complex(2, 5));
   CHECK(a.Top() == Complex(2, 5));
