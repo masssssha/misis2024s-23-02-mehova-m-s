@@ -16,7 +16,7 @@ public:
   Shell(const Shell&) = delete;
   Shell& operator=(const Shell&) = delete;
   ~Shell() = default;
-  Shell(const double& x);
+  //Shell(const double& x);
   void SetW(const double w) { w_ = w; }
   void SetH(const double h) { h_ = h; }
 public:
@@ -32,7 +32,7 @@ public:
 private:
   void UpdateCountour();
   void UpdateShell();
-  void UpLine();
+  //void UpLine();
 };
 
 Shell::Shell() {
@@ -45,10 +45,10 @@ Shell::Shell() {
     }, 3); //  < -dimensionality of the points
   UpdateCountour();
   UpdateShell();
-  UpLine();
+  //UpLine();
 }
 
-Shell::Shell(const double& x) {
+/*Shell::Shell(const double& x) {
   spline_ = tinyspline::BSpline::interpolateCubicNatural(
     { 1.0, -1.0, 0+x, // P1
       -1.0, 2.0, 0+x,  // P2
@@ -58,7 +58,7 @@ Shell::Shell(const double& x) {
     }, 3); //  < -dimensionality of the points
   UpdateCountour();
   UpdateShell();
-}
+}*/
 
 void Shell::UpdateCountour() {
   const int n_points = n_medial_seg_ + 1;
@@ -124,9 +124,9 @@ void Shell::UpdateShell() {
   }
 }
 
-void Shell::UpLine() {
+/*void Shell::UpLine() {
   Shell newline(2.0);
-}
+}*/
 
 
 Eigen::MatrixXd CalcContour(
