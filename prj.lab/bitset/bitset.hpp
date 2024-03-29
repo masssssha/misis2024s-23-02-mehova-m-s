@@ -9,6 +9,18 @@
 
 class BitSet {
 public:
+  class BiA {
+  private:
+    BitSet& bs_;
+    std::int32_t id_;
+  public:
+    BiA() = delete;
+    BiA(BitSet& x, const std::int32_t ind) : bs_(x), id_(ind) {}
+    ~BiA() = default;
+    void operator=(const bool v) {
+      bs_.Set(id_, v);
+    }
+  };
   BitSet() = default;
   ~BitSet() = default;
   BitSet(const std::int32_t s);
@@ -16,7 +28,7 @@ public:
   BitSet(BitSet&& x) noexcept;
   BitSet& operator=(const BitSet& x);
   BitSet& operator=(BitSet&& x) noexcept;
-  std::int32_t Size();                           //done
+  std::int32_t Size();
   void Resize(const std::int32_t s);
   bool Get(const std::int32_t ind) const;
   void Set(const std::int32_t ind, const bool v);
@@ -27,6 +39,8 @@ public:
   BitSet& operator|=(const BitSet& x);
   BitSet& operator^=(const BitSet& x);
   void operator~();
+  BiA operator[](const std::int32_t ind);
+  bool operator[](const std::int32_t ind) const;
 private:
   std::int32_t size_ = 0;
   std::vector<std::uint32_t> bit_set;

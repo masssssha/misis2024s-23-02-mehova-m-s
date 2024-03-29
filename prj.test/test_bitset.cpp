@@ -234,3 +234,15 @@ TEST_CASE("comparison test") {
 
   CHECK(bitset == bitset2);
 }
+
+TEST_CASE("operator[]") {
+  BitSet a(89);
+  a.Set(10, 1);
+  a.Set(55, 1);
+  a.Set(63, 1);
+  a.Set(64, 1);
+  a.Set(65, 1);
+  CHECK_THROWS(a[89] = 1);
+  a[55] = 1;
+  CHECK(a.Get(55) == 1);
+}

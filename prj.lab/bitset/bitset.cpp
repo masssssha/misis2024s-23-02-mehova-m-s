@@ -158,3 +158,18 @@ BitSet& BitSet::operator^=(const BitSet& x) {
 BitSet operator^(const BitSet& x, const BitSet& y) {
   return BitSet(x) ^= y;
 }
+
+BitSet::BiA BitSet::operator[](const std::int32_t ind) {
+  if (ind >= size_ || ind < 0) {
+    throw std::out_of_range("index out of range");
+  }
+  BiA a(*this, ind);
+  return a;
+}
+
+bool BitSet::operator[](const std::int32_t ind) const {
+  if (ind >= size_ || ind < 0) {
+    throw std::out_of_range("index out of range");
+  }
+  return Get(ind);
+}
