@@ -26,26 +26,31 @@ public:
   Eigen::MatrixXi shell_surf_f_;  // shell surface faccets
   double r_ = 0.4;                //  iccv
   double w_ = 10.0;                //
-  double h_ = 10.0;                //
-  int n_medial_seg_ = 10;        // medial uniform segments count
+  double h_ = 1.0;                //
+  int n_medial_seg_ = 100;        // medial uniform segments count
 private:
   void UpdateCountour();
   void UpdateShell();
   void eigen_sort_rows_by_head(Eigen::MatrixXd &A);
-  //void OXY();
+  void Upline();
+  void OXY();
 };
 
 Shell::Shell() {
   spline_ = tinyspline::BSpline::interpolateCubicNatural(
-    { 1.0, -1.0, 0, // P1
-      -1.0, 2.0, 0,  // P2
-        1.0, 4.0, 0, // P3
+    { -1.0, -1.0, 0, // P1
+    0.0, 0.0, 0.0,
+      1.0, 2.0, 0,  // P2
+        3.0, 4.0, 0, // P3
         4.0, 3.0, 0, // P4
         7.0, 5.0, 0, // P5
     }, 3); //  < -dimensionality of the points
   UpdateCountour();
   UpdateShell();
-  //OXY();
+  for (int i = 0; i < 6; i++) {
+    Upline();
+  }
+  OXY();
 }
 
 void Shell::UpdateCountour() {
@@ -89,8 +94,6 @@ void Shell::UpdateShell() {
   for (int i = 0; i < n_m; i += 1) {
     medial_top.row(i) += dv;
   }
-  std::cout << v << std::endl;
-  std::cout << std::endl;
   /*hell
   for (int i = 0; i < n_v - 1; i += 1) {
     auto section = v.block(n_u * (1 + i), 0, n_u, 3);
@@ -108,15 +111,14 @@ void Shell::UpdateShell() {
     f(i, 1) = n_m + i;
     f(i, 2) = i + 1;
 
-    f(i + n_m - 1, 0) = i + 1;
-    f(i + n_m - 1, 1) = i + n_m;
-    f(i + n_m - 1, 2) = i + n_m + 1;
+    f(i + n_m-1, 0) = i + 1;
+    f(i + n_m-1, 1) = i + n_m;
+    f(i + n_m-1, 2) = i + n_m + 1;
     
   }
-  std::cout << f << std::endl;
 }
 
-/*void Shell::OXY() {
+void Shell::OXY() {
   Eigen::MatrixXd v = shell_surf_v_;
   Eigen::MatrixXd x = Eigen::MatrixXd(3, 3);
   shell_surf_v_ = Eigen::MatrixXd(shell_surf_v_.rows() + 3, shell_surf_v_.cols());
@@ -139,7 +141,59 @@ void Shell::UpdateShell() {
   y(0, 2) = shell_surf_v_.rows() - 1;
   shell_surf_f_ << f, y;
   std::cout << shell_surf_f_;
-}*/
+}
+
+void Shell::Upline() {
+  int n_m = n_medial_seg_*2;
+  int n = (n_medial_seg_+1) * 2;
+  int start = shell_surf_v_.rows() - n;
+  Eigen::MatrixXd v = shell_surf_v_;
+  Eigen::MatrixXd z(n, 3);
+  for (int i = 0; i < n; i++) {
+    z(i, 0) = v(i + start, 0);
+    z(i, 1) = v(i + start, 1);
+    z(i, 2) = v(i + start, 2) + r_;
+  }
+  shell_surf_v_ = Eigen::MatrixXd(v.rows() + z.rows(), 3);
+  shell_surf_v_ << v, z;
+  Eigen::MatrixXi old = shell_surf_f_;
+  Eigen::MatrixXi new_(n_m, 3);
+  for (int i = 0; i < n_m/2; i += 1) {
+    new_(i, 0) = i + start;
+    new_(i, 1) = i + n + start;
+    new_(i, 2) = i + 1 + start;
+
+    new_(i + n_m/2, 0) = i + 1 + start;
+    new_(i + n_m/2, 1) = i + n + start;
+    new_(i + n_m/2, 2) = i + n + 1 + start;
+  }
+  Eigen::MatrixXi new_1(n_m, 3);
+  for (int i = 0; i < n_m / 2; i += 1) {
+    new_1(i, 0) = i + n/2 + start;
+    new_1(i, 1) = i + n + n / 2 + start;
+    new_1(i, 2) = i + 1 + n / 2 + start;
+
+    new_1(i + n_m / 2, 0) = i + 1 + n / 2 + start;
+    new_1(i + n_m / 2, 1) = i + n + n / 2 + start;
+    new_1(i + n_m / 2, 2) = i + n + 1 + n / 2 + start;
+  }
+  Eigen::MatrixXi f(n_m, 3);
+  for (int i = 0; i < n_m/2; i += 1) {
+    f(i, 0) = i + n + start;
+    f(i, 1) = i + n + n/2 + start;
+    f(i, 2) = i + 1 + n + start;
+
+    f(i + n_m/2, 0) = i + 1 + n + start;
+    f(i + n_m/2, 1) = i + n/2+ n + start;
+    f(i + n_m/2, 2) = i + n/2+ 1 + n + start;
+  }
+  Eigen::MatrixXi ff{{start, start + n, start + n / 2},
+  { start + n / 2, start + n, start + n + n / 2},
+  { start + n / 2 - 1, start + n / 2 - 1 + n, start + n - 1},
+  { start + n-1, start + n/2-1+n, start + 2*n-1}};
+  shell_surf_f_ = Eigen::MatrixXi(shell_surf_f_.rows() + 3*n_m + ff.rows(), 3);
+  shell_surf_f_ << old, new_, new_1, f, ff;
+}
 
 Eigen::MatrixXd CalcContour(
     const tinyspline::BSpline& crv, 
