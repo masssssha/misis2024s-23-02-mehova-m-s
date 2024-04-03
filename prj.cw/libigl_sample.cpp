@@ -27,7 +27,7 @@ public:
   double r_ = 0.4;                //  iccv
   double w_ = 10.0;                //
   double h_ = 1.0;                //
-  int n_medial_seg_ = 100;        // medial uniform segments count
+  int n_medial_seg_ = 200;        // medial uniform segments count
 private:
   void UpdateCountour();
   void UpdateShell();
@@ -41,16 +41,16 @@ Shell::Shell() {
     { -1.0, -1.0, 0, // P1
     0.0, 0.0, 0.0,
       1.0, 2.0, 0,  // P2
-        3.0, 4.0, 0, // P3
+        3.0, 3.5, 0, // P3
         4.0, 3.0, 0, // P4
-        7.0, 5.0, 0, // P5
+        7.0, 4.0, 0, // P5
     }, 3); //  < -dimensionality of the points
   UpdateCountour();
   UpdateShell();
-  for (int i = 0; i < 6; i++) {
+  for (int i = 0; i < 3; i++) {
     Upline();
   }
-  OXY();
+  //OXY();
 }
 
 void Shell::UpdateCountour() {
@@ -132,7 +132,6 @@ void Shell::OXY() {
   x(2, 1) = 1;
   x(2, 2) = 0;
   shell_surf_v_ << v, x; 
-  std::cout << shell_surf_v_;
   Eigen::MatrixXi f = shell_surf_f_;
   Eigen::MatrixXi y = Eigen::MatrixXi(1, 3);
   shell_surf_f_ = Eigen::MatrixXi(shell_surf_f_.rows() + 1, shell_surf_f_.cols());
@@ -140,7 +139,6 @@ void Shell::OXY() {
   y(0, 1) = shell_surf_v_.rows() - 2;
   y(0, 2) = shell_surf_v_.rows() - 1;
   shell_surf_f_ << f, y;
-  std::cout << shell_surf_f_;
 }
 
 void Shell::Upline() {
