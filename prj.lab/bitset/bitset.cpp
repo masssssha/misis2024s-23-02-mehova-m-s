@@ -173,3 +173,48 @@ bool BitSet::operator[](const std::int32_t ind) const {
   }
   return Get(ind);
 }
+
+void BitSet::Fill(const bool v) noexcept {
+  for (int i = 0; i < size_; i++) {
+    Set(i, v);
+  }
+}
+
+std::ostream& BitSet::WriteTxt(std::ostream& x) const noexcept {
+  x << size_ << std::endl;
+  int start = 1;
+  for (int i = 0; i < size_; i++) {
+    x << Get(i);
+    if ((i + 1) % 32 == 0) {
+      x << " " << start << "-" << (i + 1) << std::endl;
+      start += 32;
+    }
+    else if ((i + 1) == size_) {
+      int ind = i;
+      while (ind < bit_set.size()*32) {
+        x << " ";
+        ind += 1;
+      }
+      x << start << "-" << size_ << std::endl;
+    }
+  }
+  return x;
+}
+
+std::istream& BitSet::ReadTxt(std::istream& x) noexcept {
+  std::string s;
+  x >> s;
+  if (x.good()) {
+    Resize(s.length());
+    for (int i = 0; i < s.length(); i++) {
+      if (s[i] == '0' || s[i] == '1') {
+        Set(i, int(s[i]) - '0');
+      }
+      else {
+        x.setstate(std::ios_base::failbit);
+      }
+    }
+  }
+  size_ = s.length();
+  return x;
+}

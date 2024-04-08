@@ -245,4 +245,16 @@ TEST_CASE("operator[]") {
   CHECK_THROWS(a[89] = 1);
   a[55] = 1;
   CHECK(a.Get(55) == 1);
+  std::cout << a;
+  BitSet b(32);
+  std::cout << b;
+  b[31] = 1;
+  b[15] = 1;
+  b[0] = 1;
+  std::cout << b;
+  BitSet c;
+  std::cin >> c;
+  std::cout << c;
+  c.Fill(1);
+  std::cout << c;
 }

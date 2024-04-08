@@ -3,6 +3,7 @@
 
 #include <stdexcept>
 #include <vector>
+#include <string>
 #include <algorithm>
 #include <utility>
 #include <iostream>
@@ -33,6 +34,7 @@ public:
   bool Get(const std::int32_t ind) const;
   void Set(const std::int32_t ind, const bool v);
   void Clear();
+  void Fill(const bool v) noexcept;
   bool operator==(const BitSet& x) const noexcept;
   bool operator!=(const BitSet& x) const noexcept;
   BitSet& operator&=(const BitSet& x);
@@ -41,6 +43,10 @@ public:
   void operator~();
   BiA operator[](const std::int32_t ind);
   bool operator[](const std::int32_t ind) const;
+  std::ostream& WriteTxt(std::ostream& x) const noexcept;
+  std::ostream& WriteBinary(std::ostream& x);
+  std::istream& ReadTxt(std::istream& x) noexcept;
+  std::istream& ReadBinary(std::istream& x);
 private:
   std::int32_t size_ = 0;
   std::vector<std::uint32_t> bit_set;
@@ -49,5 +55,12 @@ private:
 BitSet operator&(const BitSet& x, const BitSet& y);
 BitSet operator|(const BitSet& x, const BitSet& y);
 BitSet operator^(const BitSet& x, const BitSet& y);
+
+inline std::ostream& operator<<(std::ostream& ostrm, const BitSet& x) noexcept {
+  return x.WriteTxt(ostrm);
+}
+inline std::istream& operator>>(std::istream& istrm, BitSet& x) noexcept {
+  return x.ReadTxt(istrm);
+}
 
 #endif
