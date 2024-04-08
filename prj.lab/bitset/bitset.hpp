@@ -44,9 +44,9 @@ public:
   BiA operator[](const std::int32_t ind);
   bool operator[](const std::int32_t ind) const;
   std::ostream& WriteTxt(std::ostream& x) const noexcept;
-  std::ostream& WriteBinary(std::ostream& x);
+  std::ostream& WriteBinary(std::ostream& x) const noexcept;
   std::istream& ReadTxt(std::istream& x) noexcept;
-  std::istream& ReadBinary(std::istream& x);
+  std::istream& ReadBinary(std::istream& x) noexcept;
 private:
   std::int32_t size_ = 0;
   std::vector<std::uint32_t> bit_set;

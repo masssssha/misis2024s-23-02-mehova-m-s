@@ -201,20 +201,45 @@ std::ostream& BitSet::WriteTxt(std::ostream& x) const noexcept {
   return x;
 }
 
+//?
+
 std::istream& BitSet::ReadTxt(std::istream& x) noexcept {
-  std::string s;
-  x >> s;
-  if (x.good()) {
-    Resize(s.length());
-    for (int i = 0; i < s.length(); i++) {
-      if (s[i] == '0' || s[i] == '1') {
-        Set(i, int(s[i]) - '0');
-      }
-      else {
-        x.setstate(std::ios_base::failbit);
+  int siz = 0;
+  x >> siz;
+  Resize(siz);
+  int count = (size_-1) / 32 + 1;
+  int box = 0;
+  for (int j = 0; j < count; j++) {
+    std::string s;
+    x >> s;
+    if (x.good()) {
+      for (int i = 0; i < s.length(); i++) {
+        if (s[i] == '0' || s[i] == '1') {
+          Set(i+box, int(s[i]) - '0');
+        }
+        else {
+          x.setstate(std::ios_base::failbit);
+        }
       }
     }
+    //std::cout << s << std::endl;
+    box += 32;
+    std::getline(x, s);
   }
-  size_ = s.length();
+  return x;
+}
+
+std::ostream& BitSet::WriteBinary(std::ostream& x) const noexcept {
+  std::string start(32, '0');
+  std::string end(32, '1');
+  x << start << " " << size_ << " ";
+  int sum(0);
+  for (int i = 0; i <= (size_ - 1) / 32; i++) {
+    x << bit_set[i] << " ";
+    for (int j = 0; j < 32; j++) {
+      sum += Get(j + i*32);
+    }
+  }
+  x << sum  << " " << end << " ";
   return x;
 }
