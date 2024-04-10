@@ -25,8 +25,8 @@ public:
   Eigen::MatrixXd shell_surf_v_;   // shell surface vertex
   Eigen::MatrixXi shell_surf_f_;  // shell surface faccets
   double r_ = 0.4;                //  iccv
-  double w_ = 10.0;                //
-  double h_ = 5.0;                //
+  double w_ = 0.5;                //
+  double h_ = 0.5;                //
   int n_medial_seg_ = 100;        // medial uniform segments count
 private:
   void UpdateCountour();
@@ -48,7 +48,7 @@ Shell::Shell() {
     }, 3); //  < -dimensionality of the points
   UpdateCountour();
   UpdateShell();
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 5; i++) {
     Upline();
   }
   Lid();
@@ -159,12 +159,12 @@ void Shell::Upline() {
   Eigen::MatrixXi new_(n_m, 3);
   for (int i = 0; i < n_m/2; i += 1) {
     new_(i, 0) = i + start;
-    new_(i, 1) = i + n + start;
-    new_(i, 2) = i + 1 + start;
+    new_(i, 1) = i + 1 + start;
+    new_(i, 2) = i + n + start;
 
     new_(i + n_m/2, 0) = i + 1 + start;
-    new_(i + n_m/2, 1) = i + n + start;
-    new_(i + n_m/2, 2) = i + n + 1 + start;
+    new_(i + n_m/2, 1) = i + n + start + 1;
+    new_(i + n_m/2, 2) = i + n + start;
   }
   Eigen::MatrixXi new_1(n_m, 3);
   for (int i = 0; i < n_m / 2; i += 1) {
@@ -174,7 +174,7 @@ void Shell::Upline() {
 
     new_1(i + n_m / 2, 0) = i + 1 + n / 2 + start;
     new_1(i + n_m / 2, 1) = i + n + n / 2 + start;
-    new_1(i + n_m / 2, 2) = i + n + 1 + n / 2 + start;
+    new_1(i + n_m / 2, 2) = i + n + n / 2 + start + 1;
   }
   /*Eigen::MatrixXi f(n_m, 3);
   for (int i = 0; i < n_m/2; i += 1) {
@@ -188,8 +188,8 @@ void Shell::Upline() {
   }*/
   Eigen::MatrixXi ff{{start, start + n, start + n / 2},
   { start + n / 2, start + n, start + n + n / 2},
-  { start + n / 2 - 1, start + n / 2 - 1 + n, start + n - 1},
-  { start + n-1, start + n/2-1+n, start + 2*n-1}};
+    {start +n/2-1, start + n - 1, start + n / 2 - 1 + n },
+    { start + n - 1, start + 2 * n - 1 , start + n / 2 - 1 + n }};
   shell_surf_f_ = Eigen::MatrixXi(shell_surf_f_.rows() + 2*n_m + ff.rows(), 3);
   shell_surf_f_ << old, new_, new_1, ff;
 }
@@ -202,12 +202,12 @@ void Shell::Lid() {
   Eigen::MatrixXi f(n_m, 3);
   for (int i = 0; i < n_m / 2; i += 1) {
     f(i, 0) = i + start;
-    f(i, 1) = i + n / 2 + start;
-    f(i, 2) = i + 1 + start;
+    f(i, 1) = i + 1 + start;
+    f(i, 2) = i + n/2 + start;
 
     f(i + n_m / 2, 0) = i + 1 + start;
-    f(i + n_m / 2, 1) = i + n / 2 + start;
-    f(i + n_m / 2, 2) = i + n / 2 + 1 + start;
+    f(i + n_m / 2, 1) = i + n / 2 + 1 + start;
+    f(i + n_m / 2, 2) = i + n / 2 + start;
   }
   shell_surf_f_ = Eigen::MatrixXi(f.rows() + old.rows(), 3);
   shell_surf_f_ << old, f;
