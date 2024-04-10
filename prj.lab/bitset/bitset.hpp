@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <utility>
 #include <iostream>
+#include <cstdint>
 
 class BitSet {
 public:
