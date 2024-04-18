@@ -27,39 +27,45 @@ private:
   Node* head_ = nullptr;
 };
 
-template<class T> StackLstT<T>::StackLstT(StackLstT&& x) noexcept {
+template<class T> 
+StackLstT<T>::StackLstT(StackLstT&& x) noexcept {
   std::swap(head_, x.head_);
 }
 
-template<class T> StackLstT<T>& StackLstT<T>::operator=(StackLstT&& x) noexcept {
+template<class T> 
+StackLstT<T>& StackLstT<T>::operator=(StackLstT&& x) noexcept {
   if (head_ != x.head_) {
     std::swap(head_, x.head_);
   }
   return *this;
 }
 
-template<class T> T& StackLstT<T>::Top() {
+template<class T> 
+T& StackLstT<T>::Top() {
   if (head_ == nullptr) {
     throw std::logic_error("Stack is empty");
   }
   return (head_->v);
 }
 
-template<class T> const T& StackLstT<T>::Top() const {
+template<class T> 
+const T& StackLstT<T>::Top() const {
   if (head_ == nullptr) {
     throw std::logic_error("Stack is empty");
   }
   return (head_->v);
 }
 
-template<class T> void StackLstT<T>::Push(const T& x) {
+template<class T> 
+void StackLstT<T>::Push(const T& x) {
   Node* temp = head_;
   head_ = new Node;
   head_->v = x;
   head_->next = temp;
 }
 
-template<class T> void StackLstT<T>::Pop() noexcept {
+template<class T> 
+void StackLstT<T>::Pop() noexcept {
   if (head_ != nullptr) {
     Node* temp = head_;
     head_ = temp->next;
@@ -67,7 +73,8 @@ template<class T> void StackLstT<T>::Pop() noexcept {
   }
 }
 
-template<class T> bool StackLstT<T>::IsEmpty() noexcept {
+template<class T> 
+bool StackLstT<T>::IsEmpty() noexcept {
   if (head_ == nullptr) {
     return true;
   }
@@ -76,13 +83,15 @@ template<class T> bool StackLstT<T>::IsEmpty() noexcept {
   }
 }
 
-template<class T> StackLstT<T>::~StackLstT() {
+template<class T> 
+StackLstT<T>::~StackLstT() {
   while (!IsEmpty()) {
     Pop();
   }
 }
 
-template<class T> StackLstT<T>::StackLstT(const StackLstT& x) {
+template<class T> 
+StackLstT<T>::StackLstT(const StackLstT& x) {
   if (x.head_ != nullptr) {
     head_ = new Node;
     head_->v = x.head_->v;
@@ -98,7 +107,8 @@ template<class T> StackLstT<T>::StackLstT(const StackLstT& x) {
   }
 }
 
-template<class T> StackLstT<T>& StackLstT<T>::operator=(const StackLstT& x) {
+template<class T> 
+StackLstT<T>& StackLstT<T>::operator=(const StackLstT& x) {
   if (x.head_ != head_) {
     if (x.head_ == nullptr) {
       while (head_ != nullptr) {
@@ -140,7 +150,8 @@ template<class T> StackLstT<T>& StackLstT<T>::operator=(const StackLstT& x) {
   return *this;
 }
 
-template<class T> void StackLstT<T>::Clear() noexcept {
+template<class T> 
+void StackLstT<T>::Clear() noexcept {
   while (!IsEmpty()) {
     Pop();
   }
