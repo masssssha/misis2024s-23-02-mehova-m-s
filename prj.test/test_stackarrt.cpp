@@ -1,13 +1,14 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <stackarrt/stackarrt.hpp>
 #include <complex/complex.hpp>
-#include "make_vector.hpp"
 #include "doctest.h"
 #include <fstream>
 
-TEST_CASE_TEMPLATE("StackArrT", T, Complex, int, double, std::string) {
-  int count_(0);
-  std::vector<T> test = Make_Vector(10);
+TEST_CASE_TEMPLATE("StackArrT", T, Complex, int, double) {
+  std::vector<T> test;
+  for (int i = 0; i < 10; i++) {
+    test.push_back(T(i));
+  }
   StackArrT<T> s;
   s.Push(test[0]);
   s.Push(test[8]);

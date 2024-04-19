@@ -150,5 +150,4 @@ void StackArrT<T>::Clear() noexcept {
   i_head_ = -1;
 }
 
-
 #endif
