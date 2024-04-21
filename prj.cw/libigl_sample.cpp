@@ -56,6 +56,7 @@ Shell::Shell() {
     Upline();
   }
   Lid();
+  Cube();
 }
 
 void Shell::UpdateCountour() {
@@ -218,9 +219,18 @@ void Shell::Lid() {
 }
 
 void Shell::Cube() {
-  Eigen::MatrixXd& V = shell_surf_v_;
-  Eigen::Vector3d m = V.colwise().minCoeff();
-  Eigen::Vector3d M = V.colwise().maxCoeff();
+  Eigen::Vector3d min_ = shell_surf_v_.colwise().minCoeff();
+  Eigen::Vector3d max_ = shell_surf_v_.colwise().maxCoeff();
+  double mn, mx;
+  mn = std::min(min_(0), std::min(min_(1), min_(2)));
+  mn = 1 - mn;
+  mx = (std::max(max_(0), std::max(max_(1), max_(2)))) + mn;
+  mx = std::abs(mx);
+  for (int i = 0; i < shell_surf_v_.rows(); i++) {
+    shell_surf_v_(i, 0) = (shell_surf_v_(i, 0) + mn)/(mx+1);
+    shell_surf_v_(i, 1) = (shell_surf_v_(i, 1) + mn)/(mx+1);
+    shell_surf_v_(i, 2) = (shell_surf_v_(i, 2) + mn)/(mx+1);
+  }
 }
 
 Eigen::MatrixXd CalcContour(
@@ -257,6 +267,7 @@ int main() {
 
   Eigen::MatrixXd V = surf.shell_surf_v_;
   Eigen::MatrixXi F = surf.shell_surf_f_;
+
     // Load a mesh in OFF format
 
     // Find the bounding box
@@ -307,8 +318,17 @@ int main() {
       V_box.row(E_box(i, 1)),
       Eigen::RowVector3d(0.5, 0, 0)
     );
-
   viewer.data().point_size = 5;
+
+  // Plot labels with the coordinates of bounding box vertices
+  std::stringstream l1;
+  l1 << m(0) << ", " << m(1) << ", " << m(2);
+  viewer.data().add_label(m + Eigen::Vector3d(-0.007, 0, 0), l1.str());
+  std::stringstream l2;
+  l2 << M(0) << ", " << M(1) << ", " << M(2);
+  viewer.data().add_label(M + Eigen::Vector3d(0.007, 0, 0), l2.str());
+  // activate label rendering
+  viewer.data().show_custom_labels = true;
    
   viewer.launch();
 
