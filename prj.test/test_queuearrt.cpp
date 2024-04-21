@@ -1,0 +1,97 @@
+#include <queuearrt/queuearrt.hpp>
+#include<complex/complex.hpp>
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+#include "doctest.h"
+#include "make_vector.hpp"
+
+TEST_CASE_TEMPLATE("queuearrt", T, Complex, int, double, std::string) {
+  std::vector<T> test;
+  Make_Vector(test, 10);
+  QueueArrT<T> a;
+  CHECK_THROWS(a.Top());
+  a.Push(test[0]);
+  CHECK(a.Top() == test[0]);
+  a.Pop();
+  CHECK_THROWS(a.Top());
+  a.Push(test[0]);
+  a.Push(test[0]);
+  a.Push(test[0]);
+  a.Push(test[0]);
+  a.Push(test[0]);
+  a.Push(test[0]);
+  a.Push(test[0]);
+  a.Push(test[0]);
+  a.Pop();
+  CHECK(a.Top() == test[0]);
+  a.Push(test[0]);
+  a.Pop();
+  CHECK(a.Top() == test[0]);
+  a.Pop();
+  a.Pop();
+  a.Pop();
+  a.Pop();
+  a.Pop();
+  a.Pop();
+  CHECK(a.Top() == test[0]);
+  a.Pop();
+  CHECK_THROWS(a.Top());
+  a.Push(test[0]);
+  a.Push(test[0]);
+  a.Push(test[0]);
+  a.Push(test[0]);
+  a.Push(test[0]);
+  a.Push(test[0]);
+  a.Push(test[0]);
+  a.Push(test[0]);
+  a.Push(test[0]);
+  a.Push(test[0]);
+  a.Push(test[0]);
+  QueueArrT<T> b(a);
+  QueueArrT<T> d;
+  d = a;
+  CHECK(a.Top() == b.Top());
+  b.Pop();
+  CHECK(b.Top() == test[0]);
+  b.Pop();
+  b.Pop();
+  b.Pop();
+  b.Pop();
+  b.Pop();
+  b.Pop();
+  b.Pop();
+  b.Pop();
+  b.Pop();
+  CHECK(b.Top() == test[0]);
+  b.Pop();
+  CHECK_THROWS(b.Top());
+  QueueArrT<T> c;
+  c = b;
+  CHECK_THROWS(c.Top());
+  c.Push(test[0]);
+  c.Push(test[0]);
+  CHECK(c.Top() == test[0]);
+  b = c;
+  CHECK(b.Top() == test[0]);
+  b.Pop();
+  CHECK(b.Top() == test[0]);
+  c = b;
+  CHECK(c.Top() == test[0]);
+  CHECK(d.Top() == test[0]);
+  d.Pop();
+  CHECK(d.Top() == test[0]);
+  c = d;
+  CHECK(c.Top() == test[0]);
+  c.Pop();
+  c.Pop();
+  c.Pop();
+  c.Pop();
+  c.Pop();
+  CHECK(c.Top() == test[0]);
+  c = b;
+  CHECK(c.Top() == test[0]);
+  b.Push(test[0]);
+  c = std::move(b);
+  CHECK(c.Top() == test[0]);
+  c.Pop();
+  CHECK(c.Top() == test[0]);
+}
