@@ -6,7 +6,6 @@ find_package(doctest CONFIG REQUIRED)
 
 find_package(libigl CONFIG REQUIRED)  
 find_package(tinysplinecxx CONFIG REQUIRED)
-find_package(imgui CONFIG REQUIRED)
 
 add_executable(libigl_sample libigl_sample.cpp)
 target_link_libraries(libigl_sample 
@@ -16,6 +15,5 @@ target_link_libraries(libigl_sample
         igl::igl_opengl
         igl::igl_glfw
         igl::igl_imgui
-        imgui::imgui
         igl_copyleft::igl_copyleft_core
 )

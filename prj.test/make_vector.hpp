@@ -4,18 +4,22 @@
 #include <vector>
 #include <string>
 
-template <typename T> void Make_Vector(std::vector<T>& x, int& count) {
-  x.resize(count);
+template <class T> 
+void Make_Vector(std::vector<T>& x, const int count) {
+  x.clear();
+  x.reserve(count);
   for (int i = 0; i < count; i++) {
-    x[i] = T(i);
+    x.emplace_back(i);
   }
 }
 
-/*template <> void Make_Vector<std::string>(std::vector<std::string>& x, int& count) {
-  x.resize(count);
+template <> 
+void Make_Vector(std::vector<std::string>& x, const int count) {
+  x.clear();
+  x.reserve(count);
   for (int i = 0; i < count; i++) {
-    x[i] = std::string(i + 'a', i);
+    x.emplace_back(std::to_string(i));
   }
-}*/
+}
 
 #endif
