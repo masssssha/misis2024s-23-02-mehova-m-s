@@ -23,7 +23,6 @@
 # Compiled Static libraries
 *.lai
 *.la
-*.a
 *.lib
 bin
 .vs
@@ -36,4 +35,3 @@ build
 # Executables
 *.exe
 *.out
-*.app

@@ -255,5 +255,5 @@ TEST_CASE("operator[]") {
   std::cout << c;
   c.Fill(1);
   std::cout << c;*/
-  b.WriteBinary(std::cout);
+  
 }
