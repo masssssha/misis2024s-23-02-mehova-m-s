@@ -17,3 +17,14 @@ target_link_libraries(libigl_sample
         igl::igl_imgui
         igl_copyleft::igl_copyleft_core
 )
+
+find_package(opencv CONFIG)  
+if (OpenCV_FOUND )
+#    message(FATAL_ERROR "OpenCV packages found." )
+    add_executable(libigl_levels_surface libigl_levels_surface.cpp)
+    target_link_libraries(libigl_levels_surface 
+        PRIVATE 
+        opencv_core opencv_highgui opencv_imgproc
+        igl::igl_core igl::igl_opengl igl::igl_glfw igl_copyleft::igl_copyleft_core
+    )
+endif()
