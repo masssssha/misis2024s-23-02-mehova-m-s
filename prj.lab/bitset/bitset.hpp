@@ -19,8 +19,9 @@ public:
     BiA() = delete;
     BiA(BitSet& x, const std::int32_t ind) : bs_(x), id_(ind) {}
     ~BiA() = default;
-    void operator=(const bool v) {
+    BitSet& operator=(const bool v) {
       bs_.Set(id_, v);
+      return bs_;
     }
   };
   BitSet() = default;

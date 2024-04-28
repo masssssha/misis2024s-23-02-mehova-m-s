@@ -249,6 +249,7 @@ TEST_CASE("operator[]") {
   BitSet b(32);
   //std::cout << b;
   b[0] = 1;
+  CHECK(b.Get(0) == 1);
   /*std::cout << b;
   BitSet c;
   std::cin >> c;
