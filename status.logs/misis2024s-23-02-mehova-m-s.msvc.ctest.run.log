@@ -44,14 +44,14 @@ Release/D:/projects/misis2023f-23-check/misis2024s-23-02-mehova-m-s/bin.check/do
 14/20 Test #15: doctest_queuelstpr ...............   Passed    0.02 sec
 15/20 Test #14: doctest_queuelst_m ...............   Passed    0.02 sec
 16/20 Test #16: doctest_queuelstpr_m .............   Passed    0.02 sec
-17/20 Test #17: doctest_stackarr .................   Passed    0.02 sec
+17/20 Test #17: doctest_stackarr .................   Passed    0.01 sec
 18/20 Test #18: doctest_stackarr_m ...............   Passed    0.01 sec
 19/20 Test #19: doctest_stacklst .................   Passed    0.01 sec
 20/20 Test #20: doctest_stacklst_m ...............   Passed    0.01 sec
 
 95% tests passed, 1 tests failed out of 20
 
-Total Test time (real) =   0.07 sec
+Total Test time (real) =   0.06 sec
 
 The following tests FAILED:
 	  1 - doctest_bitset (Not Run)
