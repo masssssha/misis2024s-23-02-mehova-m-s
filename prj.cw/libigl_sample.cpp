@@ -209,8 +209,6 @@ void Shell::Upline() {
     { start + n - 1, start + 2 * n - 1 , start + n / 2 - 1 + n }};
   shell_surf_f_ = Eigen::MatrixXi(shell_surf_f_.rows() + 2*n_m + ff.rows(), 3);
   shell_surf_f_ << old, new_, new_1, ff;
-  std::cout << shell_surf_v_ << std::endl << std::endl << side_v_ << std::endl << std::endl;
-  std::cout << side_f_ << std::endl;
 }
 
 void Shell::Lid() {
