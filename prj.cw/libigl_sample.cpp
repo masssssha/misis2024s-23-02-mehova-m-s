@@ -12,7 +12,9 @@
 #include <igl/opengl/glfw/imgui/ImGuiMenu.h>
 #include <igl/opengl/glfw/imgui/ImGuizmoWidget.h>
 #include <sstream>
+#include <vector>
 
+#include <igl/per_vertex_normals.h>
 
 class Shell {
 public:
@@ -28,12 +30,13 @@ public:
   //Eigen::MatrixXd section_poly_;  // shell closed polyline
   Eigen::MatrixXd shell_surf_v_;   // shell surface vertex
   Eigen::MatrixXi shell_surf_f_;  // shell surface faccets
-  Eigen::MatrixXd side_v_;       //side vertex
-  Eigen::MatrixXi side_f_;       //side faccets
+  std::vector<int> side_v_;
+  Eigen::MatrixXd matrix_side_v_;
   double r_ = 0.4;                //  iccv
   double w_ = 0.5;                //
   double h_ = 0.5;                //
   int n_medial_seg_ = 3;        // medial uniform segments count
+  int z_seg = (n_medial_seg_)*2;
 private:
   void UpdateCountour();
   void UpdateShell();
@@ -41,6 +44,7 @@ private:
   void Upline();
   void Lid();
   void Cube();
+  void Side();
 };
 
 Shell::Shell() {
@@ -54,7 +58,7 @@ Shell::Shell() {
     }, 3); //  < -dimensionality of the points
   UpdateCountour();
   UpdateShell();
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < z_seg; i++) {
     Upline();
   }
   Lid();
@@ -123,12 +127,6 @@ void Shell::UpdateShell() {
     f(i + n_m-1, 1) = i + n_m;
     f(i + n_m-1, 2) = i + n_m + 1;
   }
-  side_v_ = Eigen::MatrixXd(v.rows() / 2, 3);
-  for (int i = 0; i < v.rows() / 2; i++) {
-    side_v_(i, 0) = v(i + v.rows() / 2, 0);
-    side_v_(i, 1) = v(i + v.rows() / 2, 1);
-    side_v_(i, 2) = v(i + v.rows() / 2, 2);
-  }
 }
 
 void Shell::Upline() {
@@ -137,20 +135,14 @@ void Shell::Upline() {
   int start = shell_surf_v_.rows() - n;
   Eigen::MatrixXd v = shell_surf_v_;
   Eigen::MatrixXd z(n, 3);
-  Eigen::MatrixXd si(n / 2, 3);
   for (int i = 0; i < n; i++) {
     z(i, 0) = v(i + start, 0);
     z(i, 1) = v(i + start, 1);
-    z(i, 2) = v(i + start, 2) + r_;
+    z(i, 2) = v(i + start, 2) + (shell_surf_v_(1, 0) - shell_surf_v_(0, 0));
     if (i >= n / 2) {
-      si(i - n/2, 0) = v(i + start, 0);
-      si(i - n / 2, 1) = v(i + start, 1);
-      si(i - n / 2, 2) = v(i + start, 2) + r_;
+      side_v_.push_back(i + start);
     }
   }
-  Eigen::MatrixXd old_side = side_v_;
-  side_v_ = Eigen::MatrixXd(old_side.rows() + si.rows(), 3);
-  side_v_ << old_side, si;
   shell_surf_v_ = Eigen::MatrixXd(v.rows() + z.rows(), 3);
   shell_surf_v_ << v, z;
   Eigen::MatrixXi old = shell_surf_f_;
@@ -184,16 +176,7 @@ void Shell::Upline() {
     new_side(i + n_m / 2, 1) = i + n/2 + start/2;
     new_side(i + n_m / 2, 2) = i + n/2 + start/2 + 1;
   }
-  if (side_f_.rows() == 0) {
-    side_f_ = Eigen::MatrixXi(new_side.rows(), 3);
-    side_f_ << new_side;
-  }
-  else {
-    Eigen::MatrixXi old_f = side_f_;
-    side_f_ = Eigen::MatrixXi(old_f.rows() + new_side.rows(), 3);
-    side_f_ << old_f, new_side;
-  }
-  /*Eigen::MatrixXi f(n_m, 3);           dont uncom
+  /*Eigen::MatrixXi f(n_m, 3);
   for (int i = 0; i < n_m/2; i += 1) {
     f(i, 0) = i + n + start;
     f(i, 1) = i + n + n/2 + start;
@@ -215,6 +198,9 @@ void Shell::Lid() {
   int n_m = n_medial_seg_ * 2;
   int n = (n_medial_seg_ + 1) * 2;
   int start = shell_surf_v_.rows() - n;
+  for (int i = n / 2; i < n; i++) {
+    side_v_.push_back(i + start);
+  }
   Eigen::MatrixXi old = shell_surf_f_;
   Eigen::MatrixXi f(n_m, 3);
   for (int i = 0; i < n_m / 2; i += 1) {
@@ -243,18 +229,12 @@ void Shell::Cube() {
     shell_surf_v_(i, 1) = (shell_surf_v_(i, 1) + mn)/(mx+1);
     shell_surf_v_(i, 2) = (shell_surf_v_(i, 2) + mn)/(mx+1);
   }
+}
 
-  Eigen::Vector3d min_s = side_v_.colwise().minCoeff();
-  Eigen::Vector3d max_s = side_v_.colwise().maxCoeff();
-  double mns, mxs;
-  mns = std::min(min_s(0), std::min(min_s(1), min_s(2)));
-  mns = 1 - mns;
-  mxs = (std::max(max_s(0), std::max(max_s(1), max_s(2)))) + mns;
-  mxs = std::abs(mxs);
-  for (int i = 0; i < side_v_.rows(); i++) {
-    side_v_(i, 0) = (side_v_(i, 0) + mns) / (mxs + 1);
-    side_v_(i, 1) = (side_v_(i, 1) + mns) / (mxs + 1);
-    side_v_(i, 2) = (side_v_(i, 2) + mns) / (mxs + 1);
+void Shell::Side() {
+  matrix_side_v_ = Eigen::MatrixXd(side_v_.size(), 3);
+  for (int i = 0; i < side_v_.size(); i++) {
+    matrix_side_v_(i) = shell_surf_v_(side_v_[i]);
   }
 }
 
@@ -282,6 +262,23 @@ Eigen::MatrixXd CalcContour(
 
 int main() {
   Shell surf;
+
+  Eigen::MatrixXd V = surf.shell_surf_v_;
+  Eigen::MatrixXi F = surf.shell_surf_f_;
+  Eigen::MatrixXd N;
+
+  igl::per_vertex_normals(V, F, N);
+  std::cout << N.rows() << " = " << V.rows() << std::endl;
+  std::cout << N.rowwise().norm() << std::endl;
+
+  int n = (surf.n_medial_seg_ + 1) * 2;
+  //surf.shell_surf_v_(surf.side_v_[surf.side_v_.size()/2], 1) += 0.05;
+
+  for (int i = n + n / 2; i < surf.side_v_.size() - n - n / 2; i++) {
+    if (i % 10 <= 5) {
+      surf.shell_surf_v_(surf.side_v_[i], 1) += 0.02;
+    }
+  }
   
   //igl::writeOBJ("curv.obj", surf.section_poly_, surf.f_);
   igl::writeOBJ("surf.obj", surf.shell_surf_v_, surf.shell_surf_f_);
@@ -289,9 +286,6 @@ int main() {
   igl::writePLY("surf.ply", surf.shell_surf_v_, surf.shell_surf_f_);
 
   igl::opengl::glfw::Viewer viewer;
-
-  Eigen::MatrixXd V = surf.side_v_;
-  Eigen::MatrixXi F = surf.side_f_;
 
     // Load a mesh in OFF format
 

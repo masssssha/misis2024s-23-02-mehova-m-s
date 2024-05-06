@@ -11,15 +11,15 @@
 
 class BitSet {
 public:
-  class BiA {
+  class BitAccessor {
   private:
     BitSet& bs_;
     std::int32_t id_;
   public:
-    BiA() = delete;
-    BiA(BitSet& x, const std::int32_t ind) : bs_(x), id_(ind) {}
-    ~BiA() = default;
-    BiA& operator=(const bool v) {
+    BitAccessor() = delete;
+    BitAccessor(BitSet& x, const std::int32_t ind) : bs_(x), id_(ind) {}
+    ~BitAccessor() = default;
+    BitAccessor& operator=(const bool v) {
       bs_.Set(id_, v);
       return *this;
     }
@@ -43,7 +43,7 @@ public:
   BitSet& operator|=(const BitSet& x);
   BitSet& operator^=(const BitSet& x);
   void operator~();
-  BiA operator[](const std::int32_t ind);
+  BitAccessor operator[](const std::int32_t ind);
   bool operator[](const std::int32_t ind) const;
   std::ostream& WriteTxt(std::ostream& x) const noexcept;
   std::ostream& WriteBinary(std::ostream& x) const noexcept;
