@@ -35,8 +35,8 @@ public:
   double r_ = 0.4;                //  iccv
   double w_ = 0.5;                //
   double h_ = 0.5;                //
-  int n_medial_seg_ = 3;        // medial uniform segments count
-  int z_seg = (n_medial_seg_)*2;
+  int n_medial_seg_ = 200;        // medial uniform segments count
+  int z_seg = 300;
 private:
   void UpdateCountour();
   void UpdateShell();
@@ -62,6 +62,7 @@ Shell::Shell() {
     Upline();
   }
   Lid();
+  //Side();
   Cube();
 }
 
@@ -231,12 +232,25 @@ void Shell::Cube() {
   }
 }
 
-void Shell::Side() {
+/*void Shell::Side() {
+  Eigen::MatrixXd& V = shell_surf_v_;
+  int n = (n_medial_seg_ + 1) * 2;
+  for (int i = n; i < side_v_.size() - 2 * n; i++) {
+    if (i % 10 == 8) {
+      V(side_v_[i], 1) += 0.05;
+    }
+  }
   matrix_side_v_ = Eigen::MatrixXd(side_v_.size(), 3);
   for (int i = 0; i < side_v_.size(); i++) {
     matrix_side_v_(i) = shell_surf_v_(side_v_[i]);
+    matrix_side_v_(i) = shell_surf_v_(side_v_[i]);
   }
-}
+
+  Eigen::MatrixXi& F = shell_surf_f_;
+  Eigen::MatrixXd& S = matrix_side_v_;
+  Eigen::MatrixXd N;
+  igl::per_vertex_normals(S, F, N);
+}*/
 
 Eigen::MatrixXd CalcContour(
     const tinyspline::BSpline& crv, 
@@ -263,27 +277,19 @@ Eigen::MatrixXd CalcContour(
 int main() {
   Shell surf;
 
-  Eigen::MatrixXd V = surf.shell_surf_v_;
-  Eigen::MatrixXi F = surf.shell_surf_f_;
+  Eigen::MatrixXd& V = surf.shell_surf_v_;
+  Eigen::MatrixXi& F = surf.shell_surf_f_;
+  Eigen::MatrixXd& S = surf.matrix_side_v_;
   Eigen::MatrixXd N;
-
-  igl::per_vertex_normals(V, F, N);
-  std::cout << N.rows() << " = " << V.rows() << std::endl;
-  std::cout << N.rowwise().norm() << std::endl;
-
+  
   int n = (surf.n_medial_seg_ + 1) * 2;
   //surf.shell_surf_v_(surf.side_v_[surf.side_v_.size()/2], 1) += 0.05;
 
-  for (int i = n + n / 2; i < surf.side_v_.size() - n - n / 2; i++) {
-    if (i % 10 <= 5) {
-      surf.shell_surf_v_(surf.side_v_[i], 1) += 0.02;
-    }
-  }
   
   //igl::writeOBJ("curv.obj", surf.section_poly_, surf.f_);
-  igl::writeOBJ("surf.obj", surf.shell_surf_v_, surf.shell_surf_f_);
+  igl::writeOBJ("surf.obj", V, F);
   //igl::writeOFF("surf.off", surf.shell_surf_v_, surf.shell_surf_f_);
-  igl::writePLY("surf.ply", surf.shell_surf_v_, surf.shell_surf_f_);
+  igl::writePLY("surf.ply", V, F);
 
   igl::opengl::glfw::Viewer viewer;
 
@@ -324,7 +330,6 @@ int main() {
     7, 3;
 
   // Plot the mesh
-  viewer.data().set_mesh(surf.shell_surf_v_, surf.shell_surf_f_);
   viewer.data().set_mesh(V, F);
   //viewer.data().set_mesh(surf.side_v_, surf.side_f_);
   

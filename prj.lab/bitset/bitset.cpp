@@ -232,7 +232,15 @@ std::istream& BitSet::ReadTxt(std::istream& x) noexcept {
 std::ostream& BitSet::WriteBinary(std::ostream& x) const noexcept {
   std::string start(32, '0');
   std::string end(32, '1');
-  x << start << " " << size_ << " ";
+  std::string b;
+  int c = size_;
+  while (c != 0) {
+    b += std::to_string(c % 2);
+    c /= 2;
+  };
+  std::string s0(32 - b.length(), '0');
+  std::string s(s0 + b);
+  x << start << " " << s << " ";
   int sum(0);
   for (int i = 0; i <= (size_ - 1) / 32; i++) {
     x << bit_set[i] << " ";
@@ -240,6 +248,14 @@ std::ostream& BitSet::WriteBinary(std::ostream& x) const noexcept {
       sum += Get(j + i*32);
     }
   }
-  x << sum  << " " << end << " ";
+  std::string b2;
+  int c2 = sum;
+  while (c2 != 0) {
+    b2 += std::to_string(c2 % 2);
+    c2 /= 2;
+  };
+  std::string s1(32 - b2.length(), '0');
+  std::string s2(s1 + b2);
+  x << s2  << " " << end << " ";
   return x;
 }
