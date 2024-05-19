@@ -35,8 +35,8 @@ public:
   double r_ = 0.4;                //  iccv
   double w_ = 0.5;                //
   double h_ = 0.5;                //
-  int n_medial_seg_ = 200;        // medial uniform segments count
-  int z_seg = 300;
+  int n_medial_seg_ = 3;        // medial uniform segments count
+  int z_seg = 2;
 private:
   void UpdateCountour();
   void UpdateShell();
@@ -62,7 +62,7 @@ Shell::Shell() {
     Upline();
   }
   Lid();
-  //Side();
+  Side();
   Cube();
 }
 
@@ -232,25 +232,29 @@ void Shell::Cube() {
   }
 }
 
-/*void Shell::Side() {
+void Shell::Side() {
   Eigen::MatrixXd& V = shell_surf_v_;
   int n = (n_medial_seg_ + 1) * 2;
-  for (int i = n; i < side_v_.size() - 2 * n; i++) {
-    if (i % 10 == 8) {
-      V(side_v_[i], 1) += 0.05;
+  Eigen::MatrixXi& F = shell_surf_f_;
+  Eigen::MatrixXd N;
+  igl::per_vertex_normals(V, F, N);
+  
+  double t = 0.5;
+  for (int i = n; i < side_v_.size() - n; i++) {
+    if (i % 10 == 5) {
+      V(side_v_[i], 0) = V(side_v_[i], 0) + t * N(side_v_[i], 0);
+      V(side_v_[i], 1) = V(side_v_[i], 1) + t * N(side_v_[i], 1);
+      V(side_v_[i], 2) = V(side_v_[i], 2) + t * N(side_v_[i], 2);
     }
   }
+
   matrix_side_v_ = Eigen::MatrixXd(side_v_.size(), 3);
   for (int i = 0; i < side_v_.size(); i++) {
-    matrix_side_v_(i) = shell_surf_v_(side_v_[i]);
-    matrix_side_v_(i) = shell_surf_v_(side_v_[i]);
+    matrix_side_v_(i, 0) = shell_surf_v_(side_v_[i], 0);
+    matrix_side_v_(i, 1) = shell_surf_v_(side_v_[i], 1);
+    matrix_side_v_(i, 2) = shell_surf_v_(side_v_[i], 2);
   }
-
-  Eigen::MatrixXi& F = shell_surf_f_;
-  Eigen::MatrixXd& S = matrix_side_v_;
-  Eigen::MatrixXd N;
-  igl::per_vertex_normals(S, F, N);
-}*/
+}
 
 Eigen::MatrixXd CalcContour(
     const tinyspline::BSpline& crv, 
@@ -279,8 +283,6 @@ int main() {
 
   Eigen::MatrixXd& V = surf.shell_surf_v_;
   Eigen::MatrixXi& F = surf.shell_surf_f_;
-  Eigen::MatrixXd& S = surf.matrix_side_v_;
-  Eigen::MatrixXd N;
   
   int n = (surf.n_medial_seg_ + 1) * 2;
   //surf.shell_surf_v_(surf.side_v_[surf.side_v_.size()/2], 1) += 0.05;

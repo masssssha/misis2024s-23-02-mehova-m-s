@@ -231,31 +231,45 @@ std::istream& BitSet::ReadTxt(std::istream& x) noexcept {
 
 std::ostream& BitSet::WriteBinary(std::ostream& x) const noexcept {
   std::string start(32, '0');
+  x << start << " ";
   std::string end(32, '1');
-  std::string b;
   int c = size_;
+  std::vector<int> one(32, 0);
+  int k(31);
   while (c != 0) {
-    b += std::to_string(c % 2);
+    one[k] = c % 2;
     c /= 2;
+    k -= 1;
   };
-  std::string s0(32 - b.length(), '0');
-  std::string s(s0 + b);
-  x << start << " " << s << " ";
+  for (int i = 0; i < one.size(); i++) {
+    x << one[i];
+  }
+  x << " ";
   int sum(0);
-  for (int i = 0; i <= (size_ - 1) / 32; i++) {
+  for (int i = 0; i < bit_set.size(); i++) {
     x << bit_set[i] << " ";
-    for (int j = 0; j < 32; j++) {
-      sum += Get(j + i*32);
+    if ((i + 1) == bit_set.size()) {
+      for (int j = 0; j < (size_ - 32 * i); j++) {
+        sum += Get(j + i * 32);
+      }
+    }
+    else {
+      for (int j = 0; j < 32; j++) {
+        sum += Get(j + i * 32);
+      }
     }
   }
-  std::string b2;
+  std::vector<int> two(32, 0);
   int c2 = sum;
+  k = 31;
   while (c2 != 0) {
-    b2 += std::to_string(c2 % 2);
+    two[k] = (c2 % 2);
     c2 /= 2;
-  };
-  std::string s1(32 - b2.length(), '0');
-  std::string s2(s1 + b2);
-  x << s2  << " " << end << " ";
+    k -= 1;
+  }
+  for (int i = 0; i < two.size(); i++) {
+    x << two[i];
+  }
+  x << " " << end << " ";
   return x;
 }

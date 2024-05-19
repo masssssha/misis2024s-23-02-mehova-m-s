@@ -251,10 +251,6 @@ TEST_CASE("operator[]") {
   b[0] = 1;
   CHECK(b.Get(0) == 1);
   std::cout << b;
-  BitSet c;
-  std::cin >> c;
-  std::cout << c;
-  c.Fill(1);
-  c.WriteBinary(std::cout);
-  
+  CHECK(a[55] == 1);
+  CHECK(a[55] != 0);
 }

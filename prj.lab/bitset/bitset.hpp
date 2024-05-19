@@ -23,6 +23,9 @@ public:
       bs_.Set(id_, v);
       return *this;
     }
+    operator bool() const {
+      return bs_.Get(id_);
+    }
   };
   BitSet() = default;
   ~BitSet() = default;
