@@ -9,9 +9,23 @@ Call Stack (most recent call first):
   prj.cw/CMakeLists.txt:21 (find_package)
 This warning is for project developers.  Use -Wno-dev to suppress it.
 
+CMake Error at prj.cw/CMakeLists.txt:11 (target_link_libraries):
+  Target "libigl_sample" links to:
+
+    igl::igl_imgui
+
+  but the target was not found.  Possible reasons include:
+
+    * There is a typo in the target name.
+    * A find_package call is missing for an IMPORTED target.
+    * An ALIAS target is missing.
+
+
+
 CMake Warning:
   Manually-specified variables were not used by the project:
 
     BUILD_WITH_SAMPLES
 
 
+CMake Generate step failed.  Build files cannot be regenerated correctly.
