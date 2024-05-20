@@ -19,6 +19,9 @@
 -- Looking for pthread_create in pthread
 -- Looking for pthread_create in pthread - not found
 -- Found Threads: TRUE  
--- Configuring incomplete, errors occurred!
-See also "C:/Temp/misis2023f-23-check/misis2024s-23-02-mehova-m-s/build.check/CMakeFiles/CMakeOutput.log".
-See also "C:/Temp/misis2023f-23-check/misis2024s-23-02-mehova-m-s/build.check/CMakeFiles/CMakeError.log".
+-- Found tinysplinecxx: C:/Programs/vcpkg/installed/x64-windows/include  
+-- Found Protobuf: C:/Programs/vcpkg/installed/x64-windows/tools/protobuf/protoc.exe (found version "3.21.12.0") 
+-- Found TIFF: optimized;C:/Programs/vcpkg/installed/x64-windows/lib/tiff.lib;debug;C:/Programs/vcpkg/installed/x64-windows/debug/lib/tiffd.lib (found version "4.6.0")  
+-- Found OpenCV: C:/Programs/vcpkg/installed/x64-windows (found version "4.8.0") 
+-- Configuring done
+-- Generating done

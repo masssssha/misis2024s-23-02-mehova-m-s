@@ -1,15 +1,44 @@
-CMake Error at C:/Programs/vcpkg/scripts/buildsystems/vcpkg.cmake:859 (_find_package):
-  Could not find a package configuration file provided by "tinysplinecxx"
-  with any of the following names:
-
-    tinysplinecxxConfig.cmake
-    tinysplinecxx-config.cmake
-
-  Add the installation prefix of "tinysplinecxx" to CMAKE_PREFIX_PATH or set
-  "tinysplinecxx_DIR" to a directory containing one of the above files.  If
-  "tinysplinecxx" provides a separate development package or SDK, be sure it
-  has been installed.
+CMake Warning (dev) at C:/Program Files/CMake/share/cmake-3.25/Modules/FindPackageHandleStandardArgs.cmake:438 (message):
+  The package name passed to `find_package_handle_standard_args` (OpenCV)
+  does not match the name of the calling package (opencv).  This can lead to
+  problems in calling code that expects `find_package` result variables
+  (e.g., `_FOUND`) to follow a certain pattern.
 Call Stack (most recent call first):
-  prj.cw/CMakeLists.txt:8 (find_package)
+  C:/Programs/vcpkg/installed/x64-windows/share/opencv/OpenCVConfig.cmake:354 (find_package_handle_standard_args)
+  C:/Programs/vcpkg/scripts/buildsystems/vcpkg.cmake:859 (_find_package)
+  prj.cw/CMakeLists.txt:21 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Error at prj.cw/CMakeLists.txt:11 (target_link_libraries):
+  Target "libigl_sample" links to:
+
+    igl::igl_opengl
+
+  but the target was not found.  Possible reasons include:
+
+    * There is a typo in the target name.
+    * A find_package call is missing for an IMPORTED target.
+    * An ALIAS target is missing.
 
 
+
+CMake Error at prj.cw/CMakeLists.txt:33 (target_link_libraries):
+  Target "libigl_levels_surface" links to:
+
+    igl::igl_opengl
+
+  but the target was not found.  Possible reasons include:
+
+    * There is a typo in the target name.
+    * A find_package call is missing for an IMPORTED target.
+    * An ALIAS target is missing.
+
+
+
+CMake Warning:
+  Manually-specified variables were not used by the project:
+
+    BUILD_WITH_SAMPLES
+
+
+CMake Generate step failed.  Build files cannot be regenerated correctly.
