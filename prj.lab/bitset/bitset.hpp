@@ -26,6 +26,10 @@ public:
     operator bool() const {
       return bs_.Get(id_);
     }
+    BitAccessor& operator=(const BitAccessor& x) {
+      bs_.Set(id_, x.bs_.Get(x.id_));
+      return *this;
+    }
   };
   BitSet() = default;
   ~BitSet() = default;

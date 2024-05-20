@@ -253,4 +253,9 @@ TEST_CASE("operator[]") {
   std::cout << b;
   CHECK(a[55] == 1);
   CHECK(a[55] != 0);
+  b[5] = a[55];
+  a[11] = 1;
+  b[10] = a[11];
+  CHECK(b[5] == 1);
+  std::cout << b << std::endl;
 }

@@ -35,8 +35,8 @@ public:
   double r_ = 0.4;                //  iccv
   double w_ = 0.5;                //
   double h_ = 0.5;                //
-  int n_medial_seg_ = 3;        // medial uniform segments count
-  int z_seg = 2;
+  int n_medial_seg_ = 299;        // medial uniform segments count
+  int z_seg = 199;
 private:
   void UpdateCountour();
   void UpdateShell();
@@ -48,14 +48,22 @@ private:
 };
 
 Shell::Shell() {
-  spline_ = tinyspline::BSpline::interpolateCubicNatural(
+  /*/spline_ = tinyspline::BSpline::interpolateCubicNatural(
     { -1.0, -1.0, 0, // P1
-    0.0, 0.0, 0.0,
+    //0.0, 0.0, 0.0,
       1.0, 2.0, 0,  // P2
         3.0, 3.5, 0, // P3
         4.0, 3.0, 0, // P4
         7.0, 4.0, 0, // P5
-    }, 3); //  < -dimensionality of the points
+    }, 3);*/ //  < -dimensionality of the points
+  spline_ = tinyspline::BSpline::interpolateCubicNatural(
+    { 
+      -1.0, 0.0, 0.0,
+      1.0, 0.0, 0.0, 
+      2.0, 0.0, 0.0,
+      4.0, 0.0, 0.0,
+
+    }, 3);
   UpdateCountour();
   UpdateShell();
   for (int i = 0; i < z_seg; i++) {
@@ -239,9 +247,10 @@ void Shell::Side() {
   Eigen::MatrixXd N;
   igl::per_vertex_normals(V, F, N);
   
-  double t = 0.5;
-  for (int i = n; i < side_v_.size() - n; i++) {
-    if (i % 10 == 5) {
+  double t = 0.2;
+  int center(side_v_[side_v_.size() / 2] + n/4);
+  for (int i = 0; i < side_v_.size(); i++) {
+    if (std::pow(V(side_v_[i], 2) - V(center, 2), 2) + std::pow(V(side_v_[i], 0) - V(center, 0), 2) <= 1) {
       V(side_v_[i], 0) = V(side_v_[i], 0) + t * N(side_v_[i], 0);
       V(side_v_[i], 1) = V(side_v_[i], 1) + t * N(side_v_[i], 1);
       V(side_v_[i], 2) = V(side_v_[i], 2) + t * N(side_v_[i], 2);
