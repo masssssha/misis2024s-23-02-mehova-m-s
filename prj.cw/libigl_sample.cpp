@@ -16,12 +16,15 @@
 
 #include <igl/per_vertex_normals.h>
 
+#include <opencv2/opencv.hpp>
+
 class Shell {
 public:
   Shell();
   Shell(const Shell&) = delete;
   Shell& operator=(const Shell&) = delete;
   ~Shell() = default;
+  Shell(const double& a, const double& b);
   void SetW(const double w) { w_ = w; }
   void SetH(const double h) { h_ = h; }
 public:
@@ -31,12 +34,11 @@ public:
   Eigen::MatrixXd shell_surf_v_;   // shell surface vertex
   Eigen::MatrixXi shell_surf_f_;  // shell surface faccets
   std::vector<int> side_v_;
-  Eigen::MatrixXd matrix_side_v_;
   double r_ = 0.4;                //  iccv
   double w_ = 0.5;                //
   double h_ = 0.5;                //
-  int n_medial_seg_ = 299;        // medial uniform segments count
-  int z_seg = 199;
+  int n_medial_seg_ = 10;        // medial uniform segments count
+  int z_seg = 9;
 private:
   void UpdateCountour();
   void UpdateShell();
@@ -44,7 +46,6 @@ private:
   void Upline();
   void Lid();
   void Cube();
-  void Side();
 };
 
 Shell::Shell() {
@@ -70,7 +71,32 @@ Shell::Shell() {
     Upline();
   }
   Lid();
-  Side();
+  Cube();
+}
+
+Shell::Shell(const double& a, const double& b) : n_medial_seg_(a-1), z_seg(b-1) {
+  spline_ = tinyspline::BSpline::interpolateCubicNatural(
+    { -1.0, -1.0, 0, // P1
+    //0.0, 0.0, 0.0,
+      1.0, 2.0, 0,  // P2
+        3.0, 3.5, 0, // P3
+        4.0, 3.0, 0, // P4
+        7.0, 4.0, 0, // P5
+    }, 3); //  < -dimensionality of the points
+  /*/spline_ = tinyspline::BSpline::interpolateCubicNatural(
+    {
+      -1.0, 0.0, 0.0,
+ //     1.0, 0.0, 0.0,
+ //     2.0, 0.0, 0.0,
+      4.0, 0.0, 0.0,
+
+    }, 3);*/
+  UpdateCountour();
+  UpdateShell();
+  for (int i = 0; i < z_seg; i++) {
+    Upline();
+  }
+  Lid();
   Cube();
 }
 
@@ -79,6 +105,34 @@ void Shell::UpdateCountour() {
   auto knots = spline_.uniformKnotSeq(n_points);
   auto points = spline_.evalAll(knots);
   auto tnb_vectors = spline_.computeRMF(knots);
+
+  double len_spline_(0);
+  int x(3), y(4), z(5);
+  while (z + 1 <= points.size()) {
+    len_spline_ += std::sqrt(std::pow(points[x - 3] - points[x], 2) + std::pow(points[y - 3] - points[y], 2) + std::pow(points[z - 3] - points[z], 2));
+    x += 3;
+    y += 3;
+    z += 3;
+  }
+  double len = len_spline_ / n_points;
+  const int tn_points = n_points * 100;
+  auto knots2 = spline_.uniformKnotSeq(tn_points);
+  auto points2 = spline_.evalAll(knots2);
+  int count(0);
+  int i(0);
+  while (count + 1 < n_points) {
+    double x2(0), y2(0), z2(0);
+    while ((std::sqrt(std::pow(points[count * 3] - points2[i], 2) + std::pow(points[count * 3 + 1] - points2[i + 1], 2) + std::pow(points[count * 3 + 2] - points2[i + 2], 2)) < len)) {
+      x2 = (points2[i] + points2[i + 3]) / 2;
+      y2 = (points2[i + 1] + points2[i + 4]) / 2;
+      z2 = (points2[i + 2] + points2[i + 5]) / 2;
+      i += 3;
+    }
+    points[count * 3 + 3] = x2;
+    points[count * 3 + 4] = y2;
+    points[count * 3 + 5] = z2;
+    count += 1;
+  }
   Eigen::MatrixXd pts1(n_points, 3);
   Eigen::MatrixXd pts2(n_points, 3);
   medial_poly_ = Eigen::MatrixXd(n_points, 3);
@@ -240,31 +294,6 @@ void Shell::Cube() {
   }
 }
 
-void Shell::Side() {
-  Eigen::MatrixXd& V = shell_surf_v_;
-  int n = (n_medial_seg_ + 1) * 2;
-  Eigen::MatrixXi& F = shell_surf_f_;
-  Eigen::MatrixXd N;
-  igl::per_vertex_normals(V, F, N);
-  
-  double t = 0.2;
-  int center(side_v_[side_v_.size() / 2] + n/4);
-  for (int i = 0; i < side_v_.size(); i++) {
-    if (std::pow(V(side_v_[i], 2) - V(center, 2), 2) + std::pow(V(side_v_[i], 0) - V(center, 0), 2) <= 1) {
-      V(side_v_[i], 0) = V(side_v_[i], 0) + t * N(side_v_[i], 0);
-      V(side_v_[i], 1) = V(side_v_[i], 1) + t * N(side_v_[i], 1);
-      V(side_v_[i], 2) = V(side_v_[i], 2) + t * N(side_v_[i], 2);
-    }
-  }
-
-  matrix_side_v_ = Eigen::MatrixXd(side_v_.size(), 3);
-  for (int i = 0; i < side_v_.size(); i++) {
-    matrix_side_v_(i, 0) = shell_surf_v_(side_v_[i], 0);
-    matrix_side_v_(i, 1) = shell_surf_v_(side_v_[i], 1);
-    matrix_side_v_(i, 2) = shell_surf_v_(side_v_[i], 2);
-  }
-}
-
 Eigen::MatrixXd CalcContour(
     const tinyspline::BSpline& crv, 
     const int n_points, 
@@ -288,15 +317,50 @@ Eigen::MatrixXd CalcContour(
 }
 
 int main() {
-  Shell surf;
+  
+  //picture
+  cv::Mat1b img(200, 300);
+  img = 255;
+  cv::circle(img, { img.cols / 2, img.rows / 2 }, 25, { 200 }, -1);
+  // print text
+  cv::putText(img, "Hello, OpenCV!", cv::Point(30, img.rows / 2), cv::FONT_HERSHEY_DUPLEX, 1.0, { 30 }, 2);
+  cv::Mat1b imb_neg(img.size(), CV_8UC1);
+  imb_neg = 255 - img;
+
+  cv::imshow("image", imb_neg);
+  cv::Mat1f imf_neg;
+  imb_neg.convertTo(imf_neg, CV_32FC1, 2.0 / 255.0);
+  cv::Mat1f imf_noise = cv::Mat(imf_neg.size(), CV_32FC1);
+  float std_dev = 0.05;
+  cv::randn(imf_noise, 0.0f, std_dev);
+  cv::GaussianBlur(imf_neg, imf_neg, {}, 1.0, 1.0);
+  imf_neg += imf_noise;
+
+  //surf.shell_surf_v_(surf.side_v_[surf.side_v_.size()/2], 1) += 0.05;
+  Shell surf(img.cols, img.rows);
 
   Eigen::MatrixXd& V = surf.shell_surf_v_;
   Eigen::MatrixXi& F = surf.shell_surf_f_;
-  
-  int n = (surf.n_medial_seg_ + 1) * 2;
-  //surf.shell_surf_v_(surf.side_v_[surf.side_v_.size()/2], 1) += 0.05;
 
-  
+  Eigen::MatrixXd N;
+  igl::per_vertex_normals(V, F, N);
+
+  //img+surf
+ 
+  int sdvg(0);
+  for (int i = 0; i < img.rows; i++) {
+    for (int j = 0; j < img.cols; j++) {
+      auto scale = imf_neg.at<float>(i, j) * 0.01;
+      //if (imb_neg.at<float>(j, i) == 255) 
+      {
+        V(surf.side_v_[j + sdvg], 0) += scale * N(surf.side_v_[j + sdvg], 0);
+        V(surf.side_v_[j + sdvg], 1) += scale * N(surf.side_v_[j + sdvg], 1);
+        V(surf.side_v_[j + sdvg], 2) += scale * N(surf.side_v_[j + sdvg], 2);
+      }
+    }
+    sdvg += img.cols;
+  }
+
   //igl::writeOBJ("curv.obj", surf.section_poly_, surf.f_);
   igl::writeOBJ("surf.obj", V, F);
   //igl::writeOFF("surf.off", surf.shell_surf_v_, surf.shell_surf_f_);
@@ -343,6 +407,7 @@ int main() {
   // Plot the mesh
   viewer.data().set_mesh(V, F);
   //viewer.data().set_mesh(surf.side_v_, surf.side_f_);
+  std::cout << surf.n_medial_seg_ << " " << surf.z_seg << std::endl;
   
   // Plot the corners of the bounding box as points
   viewer.data().add_points(V_box, Eigen::RowVector3d(1, 0, 0));

@@ -16,6 +16,7 @@ target_link_libraries(libigl_sample
         igl::igl_glfw
         igl::igl_imgui
         igl_copyleft::igl_copyleft_core
+        opencv_core opencv_highgui opencv_imgproc
 )
 
 find_package(opencv CONFIG REQUIRED)  
@@ -30,8 +31,14 @@ find_package(opencv CONFIG REQUIRED)
 #endif()
 
 add_executable(libigl_levels_surface libigl_levels_surface.cpp)
-    target_link_libraries(libigl_levels_surface 
+target_link_libraries(libigl_levels_surface 
         PRIVATE 
         opencv_core opencv_highgui opencv_imgproc
         igl::igl_core igl::igl_opengl igl::igl_glfw igl_copyleft::igl_copyleft_core
-    )
+)
+ add_executable(libigl_cut libigl_cut.cpp)
+ target_link_libraries(libigl_cut 
+    PRIVATE 
+        tinysplinecxx::tinysplinecxx
+ )
+

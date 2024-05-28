@@ -9,6 +9,7 @@ public:
     std::cout << x << " " << y << std::endl;
   }
   Coord(const double& r1, const double& r2) : x(r1), y(r2) {};
+  Coord(const double& r1) : x(r1), y(0) {};
   double x{ 0 };
   double y{ 0 };
 };
@@ -69,19 +70,46 @@ public:
 
 int main() {
   std::vector<std::unique_ptr<Command>> vec;
-  Coord n(10, 10);
-  double a(1), b(2), c(10), d(12);
-  vec.emplace_back(new GW(a));
-  GS* ptr2 = new GS(c);
-  vec.emplace_back(ptr2);
-  GN* ptr3 = new GN(b);
-  vec.emplace_back(ptr3);
-  GE* ptr4 = new GE((a + b));
-  vec.emplace_back(ptr4);
-  GW* ptr5 = new GW((c + a + b));
-  vec.emplace_back(ptr5);
-  for (int i = 0; i < vec.size(); i++) {
-    n = vec[i]->GO(n);
-    n.WriteTo();
+  std::string command;
+  while (std::cin >> command) {
+    if (command == "GO") {
+      double co_x(0);
+      std::cin >> co_x;
+      Coord n(co_x);
+      for (int i = 0; i < vec.size(); i++) {
+        n = vec[i]->GO(n);
+      }
+      n.WriteTo();
+    }
+    if (command == "GW") {
+      double oper(0);
+      std::cin >> oper;
+      vec.emplace_back(new GW(oper));
+    }
+    if (command == "GN") {
+      double oper(0);
+      std::cin >> oper;
+      vec.emplace_back(new GN(oper));
+    }
+    if (command == "GS") {
+      double oper(0);
+      std::cin >> oper;
+      vec.emplace_back(new GS(oper));
+    }
+    if (command == "GE") {
+      double oper(0);
+      std::cin >> oper;
+      vec.emplace_back(new GE(oper));
+    }
+    if (command == "RE") {
+      int oper(0);
+      std::cin >> oper;
+      if (oper > vec.size()) {
+        std::cout << "ERROR" << std::endl;
+      }
+      else {
+        vec.resize(vec.size() - oper);
+      }
+    }
   }
 }
