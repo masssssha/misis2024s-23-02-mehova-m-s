@@ -6,21 +6,8 @@ CMake Warning (dev) at C:/Program Files/CMake/share/cmake-3.28/Modules/FindPacka
 Call Stack (most recent call first):
   D:/programs/vcpkg/installed/x64-windows/share/opencv/OpenCVConfig.cmake:354 (find_package_handle_standard_args)
   D:/programs/vcpkg/scripts/buildsystems/vcpkg.cmake:859 (_find_package)
-  prj.cw/CMakeLists.txt:21 (find_package)
+  prj.cw/CMakeLists.txt:22 (find_package)
 This warning is for project developers.  Use -Wno-dev to suppress it.
-
-CMake Error at prj.cw/CMakeLists.txt:11 (target_link_libraries):
-  Target "libigl_sample" links to:
-
-    igl::igl_imgui
-
-  but the target was not found.  Possible reasons include:
-
-    * There is a typo in the target name.
-    * A find_package call is missing for an IMPORTED target.
-    * An ALIAS target is missing.
-
-
 
 CMake Warning:
   Manually-specified variables were not used by the project:
@@ -28,4 +15,3 @@ CMake Warning:
     BUILD_WITH_SAMPLES
 
 
-CMake Generate step failed.  Build files cannot be regenerated correctly.
