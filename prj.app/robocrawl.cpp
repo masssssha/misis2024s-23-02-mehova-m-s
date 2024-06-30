@@ -31,7 +31,7 @@ class GW : public Command {
 public: 
   GW() = default;
   GW(const double& a) : Command(a, 0) {};
-  Coord GO(Coord& a) override {
+  Coord GO(Coord& a) final {
     a.x -= n.x;
     return a;
   }

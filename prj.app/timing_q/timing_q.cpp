@@ -8,7 +8,7 @@ int main() {
   const auto start_default_lst{ std::chrono::steady_clock::now() };
   QueueLstT<int> test;
   const auto end_default_lst{ std::chrono::steady_clock::now() };
-  std::cout << "Default ctor lst: " << (end_default_lst - start_default_lst) << std::endl;
+  std::cout << "Default ctor lst: " << std::chrono::duration_cast<std::chrono::milliseconds>(end_default_lst - start_default_lst) << std::endl;
 
   const auto start_default_arr{ std::chrono::steady_clock::now() };
   QueueArrT<int> test1;

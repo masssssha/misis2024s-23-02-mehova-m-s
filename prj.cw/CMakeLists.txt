@@ -16,6 +16,7 @@ target_link_libraries(libigl_sample
         igl::igl_glfw
         igl::igl_imgui
         igl_copyleft::igl_copyleft_core
+        igl_copyleft::igl_copyleft_cgal
         opencv_core opencv_highgui opencv_imgproc
 )
 

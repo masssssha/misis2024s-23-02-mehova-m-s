@@ -4,6 +4,7 @@
 
 #include <igl/opengl/glfw/Viewer.h>
 #include <igl/writePLY.h>
+#include <igl/copyleft/cgal/mesh_boolean.h>
 
 #include <tinysplinecxx.h>
 
@@ -37,8 +38,8 @@ public:
   double r_ = 0.4;                //  iccv
   double w_ = 0.5;                //
   double h_ = 0.5;                //
-  int n_medial_seg_ = 10;        // medial uniform segments count
-  int z_seg = 9;
+  int n_medial_seg_ = 3;        // medial uniform segments count
+  int z_seg_ = 4;
 private:
   void UpdateCountour();
   void UpdateShell();
@@ -67,14 +68,14 @@ Shell::Shell() {
     }, 3);
   UpdateCountour();
   UpdateShell();
-  for (int i = 0; i < z_seg; i++) {
+  for (int i = 0; i < z_seg_; i++) {
     Upline();
   }
   Lid();
   Cube();
 }
 
-Shell::Shell(const double& a, const double& b) : n_medial_seg_(a-1), z_seg(b-1) {
+Shell::Shell(const double& a, const double& b) : n_medial_seg_(a-1), z_seg_(b-1) {
   spline_ = tinyspline::BSpline::interpolateCubicNatural(
     { -1.0, -1.0, 0, // P1
     //0.0, 0.0, 0.0,
@@ -93,7 +94,7 @@ Shell::Shell(const double& a, const double& b) : n_medial_seg_(a-1), z_seg(b-1) 
     }, 3);*/
   UpdateCountour();
   UpdateShell();
-  for (int i = 0; i < z_seg; i++) {
+  for (int i = 0; i < z_seg_; i++) {
     Upline();
   }
   Lid();
@@ -177,7 +178,7 @@ void Shell::UpdateShell() {
       section.row(i) += dz;
     }
   }*/
-
+  
   Eigen::MatrixXi& f = shell_surf_f_;
   //f = Eigen::MatrixXi(n_u * 2 - 4, 3);
   f = Eigen::MatrixXi(2*n_m - 2, 3);
@@ -219,27 +220,27 @@ void Shell::Upline() {
     new_(i + n_m/2, 1) = i + n + start + 1;
     new_(i + n_m/2, 2) = i + n + start;
   }
-  Eigen::MatrixXi new_1(n_m, 3);
-  for (int i = 0; i < n_m / 2; i += 1) {
-    new_1(i, 0) = i + n/2 + start;
-    new_1(i, 1) = i + n + n / 2 + start;
-    new_1(i, 2) = i + 1 + n / 2 + start;
-
-    new_1(i + n_m / 2, 0) = i + 1 + n / 2 + start;
-    new_1(i + n_m / 2, 1) = i + n + n / 2 + start;
-    new_1(i + n_m / 2, 2) = i + n + n / 2 + start + 1;
-  }
   Eigen::MatrixXi new_side(n_m, 3);
   for (int i = 0; i < n_m / 2; i += 1) {
-    new_side(i, 0) = i + start/2;
-    new_side(i, 1) = i + n / 2 + start/2;
-    new_side(i, 2) = i + 1 + start/2;
+    new_side(i, 0) = i + n/2 + start;
+    new_side(i, 1) = i + n + n / 2 + start;
+    new_side(i, 2) = i + 1 + n / 2 + start;
 
-    new_side(i + n_m / 2, 0) = i + 1 + start/2;
-    new_side(i + n_m / 2, 1) = i + n/2 + start/2;
-    new_side(i + n_m / 2, 2) = i + n/2 + start/2 + 1;
+    new_side(i + n_m / 2, 0) = i + 1 + n / 2 + start;
+    new_side(i + n_m / 2, 1) = i + n + n / 2 + start;
+    new_side(i + n_m / 2, 2) = i + n + n / 2 + start + 1;
   }
-  /*Eigen::MatrixXi f(n_m, 3);
+  /*Eigen::MatrixXi new_1(n_m, 3);
+  for (int i = 0; i < n_m / 2; i += 1) {
+    new_1(i, 0) = i + start/2;
+    new_1(i, 1) = i + n / 2 + start/2;
+    new_1(i, 2) = i + 1 + start/2;
+
+    new_1(i + n_m / 2, 0) = i + 1 + start/2;
+    new_1(i + n_m / 2, 1) = i + n/2 + start/2;
+    new_1(i + n_m / 2, 2) = i + n/2 + start/2 + 1;
+  }
+  Eigen::MatrixXi f(n_m, 3);
   for (int i = 0; i < n_m/2; i += 1) {
     f(i, 0) = i + n + start;
     f(i, 1) = i + n + n/2 + start;
@@ -254,7 +255,7 @@ void Shell::Upline() {
     {start +n/2-1, start + n - 1, start + n / 2 - 1 + n },
     { start + n - 1, start + 2 * n - 1 , start + n / 2 - 1 + n }};
   shell_surf_f_ = Eigen::MatrixXi(shell_surf_f_.rows() + 2*n_m + ff.rows(), 3);
-  shell_surf_f_ << old, new_, new_1, ff;
+  shell_surf_f_ << old, new_, new_side, ff;
 }
 
 void Shell::Lid() {
@@ -319,7 +320,7 @@ Eigen::MatrixXd CalcContour(
 int main() {
   
   //picture
-  cv::Mat1b img(200, 300);
+  cv::Mat1b img(3, 4);
   img = 255;
   cv::circle(img, { img.cols / 2, img.rows / 2 }, 25, { 200 }, -1);
   // print text
@@ -338,15 +339,17 @@ int main() {
 
   //surf.shell_surf_v_(surf.side_v_[surf.side_v_.size()/2], 1) += 0.05;
   Shell surf(img.cols, img.rows);
+ 
+  int n_m = surf.n_medial_seg_ * 2;
+  int n = (surf.n_medial_seg_ + 1) * 2;
 
   Eigen::MatrixXd& V = surf.shell_surf_v_;
   Eigen::MatrixXi& F = surf.shell_surf_f_;
-
+  
   Eigen::MatrixXd N;
   igl::per_vertex_normals(V, F, N);
 
   //img+surf
- 
   int sdvg(0);
   for (int i = 0; i < img.rows; i++) {
     for (int j = 0; j < img.cols; j++) {
@@ -361,12 +364,52 @@ int main() {
     sdvg += img.cols;
   }
 
+  Eigen::MatrixXd V_side_ = Eigen::MatrixXd(surf.side_v_.size(), 3);
+  Eigen::MatrixXi F_side_ = Eigen::MatrixXi(n_m * surf.z_seg_, 3);
+
+  for (int i = 0; i < surf.side_v_.size(); i++) {
+    V_side_(i, 0) = V(surf.side_v_[i], 0);
+    V_side_(i, 1) = V(surf.side_v_[i], 1);
+    V_side_(i, 2) = V(surf.side_v_[i], 2);
+  }
+  for (int j = 0; j < (surf.z_seg_); j++) {
+    for (int i = 0; i < n_m / 2; i++) {
+      F_side_(i + j * n_m, 0) = i + j * n / 2;
+      F_side_(i + j * n_m, 1) = i + j * n / 2 + n / 2;
+      F_side_(i + j * n_m, 2) = i + j * n / 2 + 1;
+
+      F_side_(i + j * n_m + n_m / 2, 0) = i + j * n / 2 + 1;
+      F_side_(i + j * n_m + n_m / 2, 1) = i + j * n / 2 + n / 2;
+      F_side_(i + j * n_m + n_m / 2, 2) = i + j * n / 2 + n / 2 + 1;
+    }
+  }
+  Eigen::MatrixXd VC;
+  Eigen::MatrixXi FC;
+  Eigen::VectorXi J;
+  igl::copyleft::cgal::mesh_boolean(V, F, V_side_, F_side_, igl::MESH_BOOLEAN_TYPE_MINUS, VC, FC, J);
+  Eigen::MatrixXd C(FC.rows(), 3);
+  for (size_t f = 0; f < C.rows(); f++)
+  {
+    if (J(f) < F.rows())
+    {
+      C.row(f) = Eigen::RowVector3d(1, 0, 0);
+    }
+    else
+    {
+      C.row(f) = Eigen::RowVector3d(0, 1, 0);
+    }
+  }
+
   //igl::writeOBJ("curv.obj", surf.section_poly_, surf.f_);
   igl::writeOBJ("surf.obj", V, F);
   //igl::writeOFF("surf.off", surf.shell_surf_v_, surf.shell_surf_f_);
   igl::writePLY("surf.ply", V, F);
 
   igl::opengl::glfw::Viewer viewer;
+
+  viewer.data().clear();
+  viewer.data().set_mesh(VC, FC);
+  viewer.data().set_colors(C);
 
     // Load a mesh in OFF format
 
@@ -405,9 +448,8 @@ int main() {
     7, 3;
 
   // Plot the mesh
-  viewer.data().set_mesh(V, F);
+  //viewer.data().set_mesh(V, F);
   //viewer.data().set_mesh(surf.side_v_, surf.side_f_);
-  std::cout << surf.n_medial_seg_ << " " << surf.z_seg << std::endl;
   
   // Plot the corners of the bounding box as points
   viewer.data().add_points(V_box, Eigen::RowVector3d(1, 0, 0));
