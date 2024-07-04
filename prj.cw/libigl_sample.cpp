@@ -317,7 +317,7 @@ Eigen::MatrixXd CalcContour(
 }
 
 
-void Extrasion(Shell& s, cv::Mat1b& im, cv::Mat1f im_neg) {
+void Extrusion(Shell& s, cv::Mat1b& im, cv::Mat1f im_neg) {
   int sdvg(0);
   Eigen::MatrixXd N;
   igl::per_vertex_normals(s.shell_surf_v_, s.shell_surf_f_, N);
@@ -360,7 +360,7 @@ int main() {
   Shell surf(img.cols, img.rows);
 
   //img+surf
-  Extrasion(surf, img, imf_neg);
+  Extrusion(surf, img, imf_neg);
 
   Eigen::MatrixXd& V = surf.shell_surf_v_;
   Eigen::MatrixXi& F = surf.shell_surf_f_;
