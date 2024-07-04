@@ -4,7 +4,6 @@
 
 #include <igl/opengl/glfw/Viewer.h>
 #include <igl/writePLY.h>
-#include <igl/copyleft/cgal/mesh_boolean.h>
 
 #include <tinysplinecxx.h>
 
@@ -317,10 +316,30 @@ Eigen::MatrixXd CalcContour(
   return pts;
 }
 
+
+void Extrasion(Shell& s, cv::Mat1b& im, cv::Mat1f im_neg) {
+  int sdvg(0);
+  Eigen::MatrixXd N;
+  igl::per_vertex_normals(s.shell_surf_v_, s.shell_surf_f_, N);
+  for (int i = 0; i < im.rows; i++) {
+    for (int j = 0; j < im.cols; j++) {
+      auto scale = im_neg.at<float>(i, j) * 0.01;
+      //if (imb_neg.at<float>(j, i) == 255) 
+      {
+        s.shell_surf_v_(s.side_v_[j + sdvg], 0) += scale * N(s.side_v_[j + sdvg], 0);
+        s.shell_surf_v_(s.side_v_[j + sdvg], 1) += scale * N(s.side_v_[j + sdvg], 1);
+        s.shell_surf_v_(s.side_v_[j + sdvg], 2) += scale * N(s.side_v_[j + sdvg], 2);
+      }
+    }
+    sdvg += im.cols;
+  }
+}
+
+
 int main() {
   
   //picture
-  cv::Mat1b img(3, 4);
+  cv::Mat1b img(200, 300);
   img = 255;
   cv::circle(img, { img.cols / 2, img.rows / 2 }, 25, { 200 }, -1);
   // print text
@@ -339,66 +358,12 @@ int main() {
 
   //surf.shell_surf_v_(surf.side_v_[surf.side_v_.size()/2], 1) += 0.05;
   Shell surf(img.cols, img.rows);
- 
-  int n_m = surf.n_medial_seg_ * 2;
-  int n = (surf.n_medial_seg_ + 1) * 2;
+
+  //img+surf
+  Extrasion(surf, img, imf_neg);
 
   Eigen::MatrixXd& V = surf.shell_surf_v_;
   Eigen::MatrixXi& F = surf.shell_surf_f_;
-  
-  Eigen::MatrixXd N;
-  igl::per_vertex_normals(V, F, N);
-
-  //img+surf
-  int sdvg(0);
-  for (int i = 0; i < img.rows; i++) {
-    for (int j = 0; j < img.cols; j++) {
-      auto scale = imf_neg.at<float>(i, j) * 0.01;
-      //if (imb_neg.at<float>(j, i) == 255) 
-      {
-        V(surf.side_v_[j + sdvg], 0) += scale * N(surf.side_v_[j + sdvg], 0);
-        V(surf.side_v_[j + sdvg], 1) += scale * N(surf.side_v_[j + sdvg], 1);
-        V(surf.side_v_[j + sdvg], 2) += scale * N(surf.side_v_[j + sdvg], 2);
-      }
-    }
-    sdvg += img.cols;
-  }
-
-  Eigen::MatrixXd V_side_ = Eigen::MatrixXd(surf.side_v_.size(), 3);
-  Eigen::MatrixXi F_side_ = Eigen::MatrixXi(n_m * surf.z_seg_, 3);
-
-  for (int i = 0; i < surf.side_v_.size(); i++) {
-    V_side_(i, 0) = V(surf.side_v_[i], 0);
-    V_side_(i, 1) = V(surf.side_v_[i], 1);
-    V_side_(i, 2) = V(surf.side_v_[i], 2);
-  }
-  for (int j = 0; j < (surf.z_seg_); j++) {
-    for (int i = 0; i < n_m / 2; i++) {
-      F_side_(i + j * n_m, 0) = i + j * n / 2;
-      F_side_(i + j * n_m, 1) = i + j * n / 2 + n / 2;
-      F_side_(i + j * n_m, 2) = i + j * n / 2 + 1;
-
-      F_side_(i + j * n_m + n_m / 2, 0) = i + j * n / 2 + 1;
-      F_side_(i + j * n_m + n_m / 2, 1) = i + j * n / 2 + n / 2;
-      F_side_(i + j * n_m + n_m / 2, 2) = i + j * n / 2 + n / 2 + 1;
-    }
-  }
-  Eigen::MatrixXd VC;
-  Eigen::MatrixXi FC;
-  Eigen::VectorXi J;
-  igl::copyleft::cgal::mesh_boolean(V, F, V_side_, F_side_, igl::MESH_BOOLEAN_TYPE_MINUS, VC, FC, J);
-  Eigen::MatrixXd C(FC.rows(), 3);
-  for (size_t f = 0; f < C.rows(); f++)
-  {
-    if (J(f) < F.rows())
-    {
-      C.row(f) = Eigen::RowVector3d(1, 0, 0);
-    }
-    else
-    {
-      C.row(f) = Eigen::RowVector3d(0, 1, 0);
-    }
-  }
 
   //igl::writeOBJ("curv.obj", surf.section_poly_, surf.f_);
   igl::writeOBJ("surf.obj", V, F);
@@ -407,12 +372,8 @@ int main() {
 
   igl::opengl::glfw::Viewer viewer;
 
-  viewer.data().clear();
-  viewer.data().set_mesh(VC, FC);
-  viewer.data().set_colors(C);
-
     // Load a mesh in OFF format
-
+  viewer.data().set_mesh(V, F);
     // Find the bounding box
   //Eigen::Vector3d m = V.colwise().minCoeff();
   Eigen::Vector3d m{0, 0, 0};
