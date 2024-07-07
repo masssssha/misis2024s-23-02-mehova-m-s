@@ -6,6 +6,8 @@ find_package(doctest CONFIG REQUIRED)
 
 find_package(libigl CONFIG REQUIRED)  
 find_package(tinysplinecxx CONFIG REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
+find_package(jsoncpp CONFIG REQUIRED)
 
 add_executable(libigl_sample libigl_sample.cpp)
 target_link_libraries(libigl_sample 
@@ -17,6 +19,7 @@ target_link_libraries(libigl_sample
         igl::igl_imgui
         igl_copyleft::igl_copyleft_core
         opencv_core opencv_highgui opencv_imgproc
+        JsonCpp::JsonCpp
 )
 
 find_package(opencv CONFIG REQUIRED)  

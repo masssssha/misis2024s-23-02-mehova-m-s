@@ -18,6 +18,13 @@
 
 #include <opencv2/opencv.hpp>
 
+#include <json/json.h>
+#include <json/value.h>
+
+#include <fstream>
+#include <iostream>
+#include <bit>
+
 class Shell {
 public:
   Shell();
@@ -48,23 +55,28 @@ private:
   void Cube();
 };
 
-Shell::Shell() {
-  /*/spline_ = tinyspline::BSpline::interpolateCubicNatural(
-    { -1.0, -1.0, 0, // P1
-    //0.0, 0.0, 0.0,
-      1.0, 2.0, 0,  // P2
-        3.0, 3.5, 0, // P3
-        4.0, 3.0, 0, // P4
-        7.0, 4.0, 0, // P5
-    }, 3);*/ //  < -dimensionality of the points
-  spline_ = tinyspline::BSpline::interpolateCubicNatural(
-    { 
-      -1.0, 0.0, 0.0,
-      1.0, 0.0, 0.0, 
-      2.0, 0.0, 0.0,
-      4.0, 0.0, 0.0,
+void Set_Spline(tinyspline::BSpline& spline_) {
+  std::ifstream file_;
+  file_.open("C:\\Users\\mehov\\Source\\Repos\\misis2024s-23-02-mehova-m-s\\prj.cw\\via_region_data.json");
+  if (!file_) {
+    std::cerr << "Can't open file ";
+  }
+  Json::Value data;
+  file_ >> data;
+  Json::Value& js_spline = data["IMG_0736.PNG7823876"]["regions"][0]["shape_attributes"];
+  int ar = js_spline["all_points_x"].size();
+  std::vector<tinyspline::real> vec(3 * ar);
+  for (int i = 0; i < ar; i++) {
+    vec[i * 3] = js_spline["all_points_x"][i].asDouble();
+    vec[i * 3 + 1] = js_spline["all_points_y"][i].asDouble();
+    vec[i * 3 + 2] = 0.0;
+  }
+  spline_ = tinyspline::BSpline(ar, 3);
+  spline_.setControlPoints(vec);
+}
 
-    }, 3);
+Shell::Shell() {
+  Set_Spline(spline_);
   UpdateCountour();
   UpdateShell();
   for (int i = 0; i < z_seg_; i++) {
@@ -75,22 +87,14 @@ Shell::Shell() {
 }
 
 Shell::Shell(const double& a, const double& b) : n_medial_seg_(a-1), z_seg_(b-1) {
-  spline_ = tinyspline::BSpline::interpolateCubicNatural(
-    { -1.0, -1.0, 0, // P1
-    //0.0, 0.0, 0.0,
-      1.0, 2.0, 0,  // P2
-        3.0, 3.5, 0, // P3
-        4.0, 3.0, 0, // P4
-        7.0, 4.0, 0, // P5
-    }, 3); //  < -dimensionality of the points
-  /*/spline_ = tinyspline::BSpline::interpolateCubicNatural(
-    {
-      -1.0, 0.0, 0.0,
- //     1.0, 0.0, 0.0,
- //     2.0, 0.0, 0.0,
-      4.0, 0.0, 0.0,
+  Set_Spline(spline_);
+  // Получение контрольных точек
+  std::vector<tinyspline::real> controlPoints = spline_.controlPoints();
 
-    }, 3);*/
+  // Вывод контрольных точек
+  for (size_t i = 0; i < controlPoints.size(); i += 3) {
+    std::cout << "Control Point " << i / 3 << ": (" << controlPoints[i] << ", " << controlPoints[i + 1] << ", " << controlPoints[i + 2] << ")" << std::endl;
+  }
   UpdateCountour();
   UpdateShell();
   for (int i = 0; i < z_seg_; i++) {
@@ -335,9 +339,7 @@ void Extrusion(Shell& s, cv::Mat1b& im, cv::Mat1f im_neg) {
   }
 }
 
-
 int main() {
-  
   //picture
   cv::Mat1b img(200, 300);
   img = 255;
