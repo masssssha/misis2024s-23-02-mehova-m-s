@@ -88,13 +88,6 @@ Shell::Shell() {
 
 Shell::Shell(const double& a, const double& b) : n_medial_seg_(a-1), z_seg_(b-1) {
   Set_Spline(spline_);
-  // Получение контрольных точек
-  std::vector<tinyspline::real> controlPoints = spline_.controlPoints();
-
-  // Вывод контрольных точек
-  for (size_t i = 0; i < controlPoints.size(); i += 3) {
-    std::cout << "Control Point " << i / 3 << ": (" << controlPoints[i] << ", " << controlPoints[i + 1] << ", " << controlPoints[i + 2] << ")" << std::endl;
-  }
   UpdateCountour();
   UpdateShell();
   for (int i = 0; i < z_seg_; i++) {
@@ -356,7 +349,7 @@ int main() {
   float std_dev = 0.05;
   cv::randn(imf_noise, 0.0f, std_dev);
   cv::GaussianBlur(imf_neg, imf_neg, {}, 1.0, 1.0);
-  imf_neg += imf_noise;
+  //imf_neg += imf_noise;
 
   //surf.shell_surf_v_(surf.side_v_[surf.side_v_.size()/2], 1) += 0.05;
   Shell surf(img.cols, img.rows);
